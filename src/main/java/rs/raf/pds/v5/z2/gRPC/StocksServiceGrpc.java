@@ -1,0 +1,417 @@
+package rs.raf.pds.v5.z2.gRPC;
+
+import static io.grpc.MethodDescriptor.generateFullMethodName;
+import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncUnaryCall;
+import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
+import static io.grpc.stub.ClientCalls.blockingUnaryCall;
+import static io.grpc.stub.ClientCalls.futureUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
+
+/**
+ */
+@javax.annotation.Generated(
+    value = "by gRPC proto compiler (version 1.9.1)",
+    comments = "Source: stocks_service.proto")
+public final class StocksServiceGrpc {
+
+  private StocksServiceGrpc() {}
+
+  public static final String SERVICE_NAME = "StocksService";
+
+  // Static method descriptors that strictly reflect the proto.
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @java.lang.Deprecated // Use {@link #getGetStockMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.StockUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> METHOD_GET_STOCK = getGetStockMethod();
+
+  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.StockUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> getGetStockMethod;
+
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.StockUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> getGetStockMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.StockUpit, rs.raf.pds.v5.z2.gRPC.Stock> getGetStockMethod;
+    if ((getGetStockMethod = StocksServiceGrpc.getGetStockMethod) == null) {
+      synchronized (StocksServiceGrpc.class) {
+        if ((getGetStockMethod = StocksServiceGrpc.getGetStockMethod) == null) {
+          StocksServiceGrpc.getGetStockMethod = getGetStockMethod = 
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.StockUpit, rs.raf.pds.v5.z2.gRPC.Stock>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "StocksService", "GetStock"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.StockUpit.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.Stock.getDefaultInstance()))
+                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("GetStock"))
+                  .build();
+          }
+        }
+     }
+     return getGetStockMethod;
+  }
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @java.lang.Deprecated // Use {@link #getSubscribeStocksMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> METHOD_SUBSCRIBE_STOCKS = getSubscribeStocksMethod();
+
+  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> getSubscribeStocksMethod;
+
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
+      rs.raf.pds.v5.z2.gRPC.Stock> getSubscribeStocksMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.Stock> getSubscribeStocksMethod;
+    if ((getSubscribeStocksMethod = StocksServiceGrpc.getSubscribeStocksMethod) == null) {
+      synchronized (StocksServiceGrpc.class) {
+        if ((getSubscribeStocksMethod = StocksServiceGrpc.getSubscribeStocksMethod) == null) {
+          StocksServiceGrpc.getSubscribeStocksMethod = getSubscribeStocksMethod = 
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.Stock>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "StocksService", "SubscribeStocks"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.SubscribeUpit.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.Stock.getDefaultInstance()))
+                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("SubscribeStocks"))
+                  .build();
+          }
+        }
+     }
+     return getSubscribeStocksMethod;
+  }
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @java.lang.Deprecated // Use {@link #getGetAllStocksMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Empty,
+      rs.raf.pds.v5.z2.gRPC.Stock> METHOD_GET_ALL_STOCKS = getGetAllStocksMethod();
+
+  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Empty,
+      rs.raf.pds.v5.z2.gRPC.Stock> getGetAllStocksMethod;
+
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Empty,
+      rs.raf.pds.v5.z2.gRPC.Stock> getGetAllStocksMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Empty, rs.raf.pds.v5.z2.gRPC.Stock> getGetAllStocksMethod;
+    if ((getGetAllStocksMethod = StocksServiceGrpc.getGetAllStocksMethod) == null) {
+      synchronized (StocksServiceGrpc.class) {
+        if ((getGetAllStocksMethod = StocksServiceGrpc.getGetAllStocksMethod) == null) {
+          StocksServiceGrpc.getGetAllStocksMethod = getGetAllStocksMethod = 
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.Empty, rs.raf.pds.v5.z2.gRPC.Stock>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(
+                  "StocksService", "GetAllStocks"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.Empty.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  rs.raf.pds.v5.z2.gRPC.Stock.getDefaultInstance()))
+                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("GetAllStocks"))
+                  .build();
+          }
+        }
+     }
+     return getGetAllStocksMethod;
+  }
+
+  /**
+   * Creates a new async stub that supports all call types for the service
+   */
+  public static StocksServiceStub newStub(io.grpc.Channel channel) {
+    return new StocksServiceStub(channel);
+  }
+
+  /**
+   * Creates a new blocking-style stub that supports unary and streaming output calls on the service
+   */
+  public static StocksServiceBlockingStub newBlockingStub(
+      io.grpc.Channel channel) {
+    return new StocksServiceBlockingStub(channel);
+  }
+
+  /**
+   * Creates a new ListenableFuture-style stub that supports unary calls on the service
+   */
+  public static StocksServiceFutureStub newFutureStub(
+      io.grpc.Channel channel) {
+    return new StocksServiceFutureStub(channel);
+  }
+
+  /**
+   */
+  public static abstract class StocksServiceImplBase implements io.grpc.BindableService {
+
+    /**
+     */
+    public void getStock(rs.raf.pds.v5.z2.gRPC.StockUpit request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetStockMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void subscribeStocks(rs.raf.pds.v5.z2.gRPC.SubscribeUpit request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncUnimplementedUnaryCall(getSubscribeStocksMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void getAllStocks(rs.raf.pds.v5.z2.gRPC.Empty request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetAllStocksMethod(), responseObserver);
+    }
+
+    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
+      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getGetStockMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                rs.raf.pds.v5.z2.gRPC.StockUpit,
+                rs.raf.pds.v5.z2.gRPC.Stock>(
+                  this, METHODID_GET_STOCK)))
+          .addMethod(
+            getSubscribeStocksMethod(),
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
+                rs.raf.pds.v5.z2.gRPC.Stock>(
+                  this, METHODID_SUBSCRIBE_STOCKS)))
+          .addMethod(
+            getGetAllStocksMethod(),
+            asyncServerStreamingCall(
+              new MethodHandlers<
+                rs.raf.pds.v5.z2.gRPC.Empty,
+                rs.raf.pds.v5.z2.gRPC.Stock>(
+                  this, METHODID_GET_ALL_STOCKS)))
+          .build();
+    }
+  }
+
+  /**
+   */
+  public static final class StocksServiceStub extends io.grpc.stub.AbstractStub<StocksServiceStub> {
+    private StocksServiceStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private StocksServiceStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected StocksServiceStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new StocksServiceStub(channel, callOptions);
+    }
+
+    /**
+     */
+    public void getStock(rs.raf.pds.v5.z2.gRPC.StockUpit request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getGetStockMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void subscribeStocks(rs.raf.pds.v5.z2.gRPC.SubscribeUpit request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(getSubscribeStocksMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void getAllStocks(rs.raf.pds.v5.z2.gRPC.Empty request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock> responseObserver) {
+      asyncServerStreamingCall(
+          getChannel().newCall(getGetAllStocksMethod(), getCallOptions()), request, responseObserver);
+    }
+  }
+
+  /**
+   */
+  public static final class StocksServiceBlockingStub extends io.grpc.stub.AbstractStub<StocksServiceBlockingStub> {
+    private StocksServiceBlockingStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private StocksServiceBlockingStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected StocksServiceBlockingStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new StocksServiceBlockingStub(channel, callOptions);
+    }
+
+    /**
+     */
+    public rs.raf.pds.v5.z2.gRPC.Stock getStock(rs.raf.pds.v5.z2.gRPC.StockUpit request) {
+      return blockingUnaryCall(
+          getChannel(), getGetStockMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.Stock> subscribeStocks(
+        rs.raf.pds.v5.z2.gRPC.SubscribeUpit request) {
+      return blockingServerStreamingCall(
+          getChannel(), getSubscribeStocksMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.Stock> getAllStocks(
+        rs.raf.pds.v5.z2.gRPC.Empty request) {
+      return blockingServerStreamingCall(
+          getChannel(), getGetAllStocksMethod(), getCallOptions(), request);
+    }
+  }
+
+  /**
+   */
+  public static final class StocksServiceFutureStub extends io.grpc.stub.AbstractStub<StocksServiceFutureStub> {
+    private StocksServiceFutureStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private StocksServiceFutureStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected StocksServiceFutureStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
+      return new StocksServiceFutureStub(channel, callOptions);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Stock> getStock(
+        rs.raf.pds.v5.z2.gRPC.StockUpit request) {
+      return futureUnaryCall(
+          getChannel().newCall(getGetStockMethod(), getCallOptions()), request);
+    }
+  }
+
+  private static final int METHODID_GET_STOCK = 0;
+  private static final int METHODID_SUBSCRIBE_STOCKS = 1;
+  private static final int METHODID_GET_ALL_STOCKS = 2;
+
+  private static final class MethodHandlers<Req, Resp> implements
+      io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
+    private final StocksServiceImplBase serviceImpl;
+    private final int methodId;
+
+    MethodHandlers(StocksServiceImplBase serviceImpl, int methodId) {
+      this.serviceImpl = serviceImpl;
+      this.methodId = methodId;
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("unchecked")
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
+      switch (methodId) {
+        case METHODID_GET_STOCK:
+          serviceImpl.getStock((rs.raf.pds.v5.z2.gRPC.StockUpit) request,
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock>) responseObserver);
+          break;
+        case METHODID_SUBSCRIBE_STOCKS:
+          serviceImpl.subscribeStocks((rs.raf.pds.v5.z2.gRPC.SubscribeUpit) request,
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock>) responseObserver);
+          break;
+        case METHODID_GET_ALL_STOCKS:
+          serviceImpl.getAllStocks((rs.raf.pds.v5.z2.gRPC.Empty) request,
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock>) responseObserver);
+          break;
+        default:
+          throw new AssertionError();
+      }
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("unchecked")
+    public io.grpc.stub.StreamObserver<Req> invoke(
+        io.grpc.stub.StreamObserver<Resp> responseObserver) {
+      switch (methodId) {
+        default:
+          throw new AssertionError();
+      }
+    }
+  }
+
+  private static abstract class StocksServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+    StocksServiceBaseDescriptorSupplier() {}
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.getDescriptor();
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
+      return getFileDescriptor().findServiceByName("StocksService");
+    }
+  }
+
+  private static final class StocksServiceFileDescriptorSupplier
+      extends StocksServiceBaseDescriptorSupplier {
+    StocksServiceFileDescriptorSupplier() {}
+  }
+
+  private static final class StocksServiceMethodDescriptorSupplier
+      extends StocksServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
+    private final String methodName;
+
+    StocksServiceMethodDescriptorSupplier(String methodName) {
+      this.methodName = methodName;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
+      return getServiceDescriptor().findMethodByName(methodName);
+    }
+  }
+
+  private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
+
+  public static io.grpc.ServiceDescriptor getServiceDescriptor() {
+    io.grpc.ServiceDescriptor result = serviceDescriptor;
+    if (result == null) {
+      synchronized (StocksServiceGrpc.class) {
+        result = serviceDescriptor;
+        if (result == null) {
+          serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new StocksServiceFileDescriptorSupplier())
+              .addMethod(getGetStockMethod())
+              .addMethod(getSubscribeStocksMethod())
+              .addMethod(getGetAllStocksMethod())
+              .build();
+        }
+      }
+    }
+    return result;
+  }
+}

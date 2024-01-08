@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "rs.raf.pds.v5.z2.gRPC";
+
+service StocksService {
+	rpc GetStock(StockUpit) returns (Stock) {}
+	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
+	rpc GetAllStocks(Empty) returns (stream Stock) {}
+}
+
+message Stock {
+ string symbol = 1;
+ string companyName = 2;
+ double startPrice = 3;
+ double changeInPrice = 4;
+ int64 dateUnix = 5;
+}
+
+message SubscribeUpit {
+    repeated string symbols = 1;
+}
+
+message StockUpit {
+    string symbol = 1;
+}
+
+message Empty {}  // Define an Empty message
