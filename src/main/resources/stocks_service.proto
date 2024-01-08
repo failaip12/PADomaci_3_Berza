@@ -4,25 +4,54 @@ option java_multiple_files = true;
 option java_package = "rs.raf.pds.v5.z2.gRPC";
 
 service StocksService {
-	rpc GetStock(StockUpit) returns (Stock) {}
-	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
+	rpc GetStock(StockRequest) returns (Stock) {}
 	rpc GetAllStocks(Empty) returns (stream Stock) {}
+
+	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
+
+	rpc GetBuyOffers(BidRequest) returns (stream BuyOffer) {}
+	rpc GetSellOffers(AskRequest) returns (stream SellOffer) {}
+
+	rpc AddBuyOffer(BuyOffer) returns (Empty) {}
+	rpc AddSellOffer(SellOffer) returns (Empty) {}
 }
 
 message Stock {
- string symbol = 1;
- string companyName = 2;
- double startPrice = 3;
- double changeInPrice = 4;
- int64 dateUnix = 5;
+	string symbol = 1;
+	string companyName = 2;
+	double startPrice = 3;
+	double changeInPrice = 4;
+	int64 dateUnix = 5;
 }
 
 message SubscribeUpit {
     repeated string symbols = 1;
 }
 
-message StockUpit {
+message StockRequest {
     string symbol = 1;
+}
+
+message BidRequest {
+	string symbol = 1;
+	int32 numberOfOffers = 2;
+}
+
+message AskRequest {
+	string symbol = 1;
+	int32 numberOfOffers = 2;
+}
+
+message BuyOffer {
+	string symbol = 1;
+	double stockPrice = 2;
+	int32 numberOfOffers = 3;
+}
+
+message SellOffer {
+	string symbol = 1;
+	double stockPrice = 2;
+	int32 numberOfOffers = 3;
 }
 
 message Empty {}  // Define an Empty message

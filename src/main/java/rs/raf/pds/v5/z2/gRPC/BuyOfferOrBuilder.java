@@ -3,8 +3,8 @@
 
 package rs.raf.pds.v5.z2.gRPC;
 
-public interface StockUpitOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:StockUpit)
+public interface BuyOfferOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:BuyOffer)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -18,4 +18,16 @@ public interface StockUpitOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSymbolBytes();
+
+  /**
+   * <code>double stockPrice = 2;</code>
+   * @return The stockPrice.
+   */
+  double getStockPrice();
+
+  /**
+   * <code>int32 numberOfOffers = 3;</code>
+   * @return The numberOfOffers.
+   */
+  int getNumberOfOffers();
 }

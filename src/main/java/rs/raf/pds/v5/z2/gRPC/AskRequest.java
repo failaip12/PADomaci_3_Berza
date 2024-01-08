@@ -4,18 +4,18 @@
 package rs.raf.pds.v5.z2.gRPC;
 
 /**
- * Protobuf type {@code StockUpit}
+ * Protobuf type {@code AskRequest}
  */
-public final class StockUpit extends
+public final class AskRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:StockUpit)
-    StockUpitOrBuilder {
+    // @@protoc_insertion_point(message_implements:AskRequest)
+    AskRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use StockUpit.newBuilder() to construct.
-  private StockUpit(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use AskRequest.newBuilder() to construct.
+  private AskRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private StockUpit() {
+  private AskRequest() {
     symbol_ = "";
   }
 
@@ -23,20 +23,20 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new StockUpit();
+    return new AskRequest();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_StockUpit_descriptor;
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_StockUpit_fieldAccessorTable
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            rs.raf.pds.v5.z2.gRPC.StockUpit.class, rs.raf.pds.v5.z2.gRPC.StockUpit.Builder.class);
+            rs.raf.pds.v5.z2.gRPC.AskRequest.class, rs.raf.pds.v5.z2.gRPC.AskRequest.Builder.class);
   }
 
   public static final int SYMBOL_FIELD_NUMBER = 1;
@@ -78,6 +78,17 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int NUMBEROFOFFERS_FIELD_NUMBER = 2;
+  private int numberOfOffers_ = 0;
+  /**
+   * <code>int32 numberOfOffers = 2;</code>
+   * @return The numberOfOffers.
+   */
+  @java.lang.Override
+  public int getNumberOfOffers() {
+    return numberOfOffers_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -95,6 +106,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, symbol_);
     }
+    if (numberOfOffers_ != 0) {
+      output.writeInt32(2, numberOfOffers_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -107,6 +121,10 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, symbol_);
     }
+    if (numberOfOffers_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(2, numberOfOffers_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -117,13 +135,15 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.StockUpit)) {
+    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.AskRequest)) {
       return super.equals(obj);
     }
-    rs.raf.pds.v5.z2.gRPC.StockUpit other = (rs.raf.pds.v5.z2.gRPC.StockUpit) obj;
+    rs.raf.pds.v5.z2.gRPC.AskRequest other = (rs.raf.pds.v5.z2.gRPC.AskRequest) obj;
 
     if (!getSymbol()
         .equals(other.getSymbol())) return false;
+    if (getNumberOfOffers()
+        != other.getNumberOfOffers()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -137,74 +157,76 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
     hash = (53 * hash) + getSymbol().hashCode();
+    hash = (37 * hash) + NUMBEROFOFFERS_FIELD_NUMBER;
+    hash = (53 * hash) + getNumberOfOffers();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(byte[] data)
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseDelimitedFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseDelimitedFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -217,7 +239,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.StockUpit prototype) {
+  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.AskRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -233,26 +255,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code StockUpit}
+   * Protobuf type {@code AskRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:StockUpit)
-      rs.raf.pds.v5.z2.gRPC.StockUpitOrBuilder {
+      // @@protoc_insertion_point(builder_implements:AskRequest)
+      rs.raf.pds.v5.z2.gRPC.AskRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_StockUpit_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_StockUpit_fieldAccessorTable
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              rs.raf.pds.v5.z2.gRPC.StockUpit.class, rs.raf.pds.v5.z2.gRPC.StockUpit.Builder.class);
+              rs.raf.pds.v5.z2.gRPC.AskRequest.class, rs.raf.pds.v5.z2.gRPC.AskRequest.Builder.class);
     }
 
-    // Construct using rs.raf.pds.v5.z2.gRPC.StockUpit.newBuilder()
+    // Construct using rs.raf.pds.v5.z2.gRPC.AskRequest.newBuilder()
     private Builder() {
 
     }
@@ -267,23 +289,24 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       symbol_ = "";
+      numberOfOffers_ = 0;
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_StockUpit_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.StockUpit getDefaultInstanceForType() {
-      return rs.raf.pds.v5.z2.gRPC.StockUpit.getDefaultInstance();
+    public rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstanceForType() {
+      return rs.raf.pds.v5.z2.gRPC.AskRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.StockUpit build() {
-      rs.raf.pds.v5.z2.gRPC.StockUpit result = buildPartial();
+    public rs.raf.pds.v5.z2.gRPC.AskRequest build() {
+      rs.raf.pds.v5.z2.gRPC.AskRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -291,36 +314,42 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.StockUpit buildPartial() {
-      rs.raf.pds.v5.z2.gRPC.StockUpit result = new rs.raf.pds.v5.z2.gRPC.StockUpit(this);
+    public rs.raf.pds.v5.z2.gRPC.AskRequest buildPartial() {
+      rs.raf.pds.v5.z2.gRPC.AskRequest result = new rs.raf.pds.v5.z2.gRPC.AskRequest(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.StockUpit result) {
+    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.AskRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.symbol_ = symbol_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.numberOfOffers_ = numberOfOffers_;
       }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof rs.raf.pds.v5.z2.gRPC.StockUpit) {
-        return mergeFrom((rs.raf.pds.v5.z2.gRPC.StockUpit)other);
+      if (other instanceof rs.raf.pds.v5.z2.gRPC.AskRequest) {
+        return mergeFrom((rs.raf.pds.v5.z2.gRPC.AskRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.StockUpit other) {
-      if (other == rs.raf.pds.v5.z2.gRPC.StockUpit.getDefaultInstance()) return this;
+    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.AskRequest other) {
+      if (other == rs.raf.pds.v5.z2.gRPC.AskRequest.getDefaultInstance()) return this;
       if (!other.getSymbol().isEmpty()) {
         symbol_ = other.symbol_;
         bitField0_ |= 0x00000001;
         onChanged();
+      }
+      if (other.getNumberOfOffers() != 0) {
+        setNumberOfOffers(other.getNumberOfOffers());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -353,6 +382,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000001;
               break;
             } // case 10
+            case 16: {
+              numberOfOffers_ = input.readInt32();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 16
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -441,6 +475,38 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private int numberOfOffers_ ;
+    /**
+     * <code>int32 numberOfOffers = 2;</code>
+     * @return The numberOfOffers.
+     */
+    @java.lang.Override
+    public int getNumberOfOffers() {
+      return numberOfOffers_;
+    }
+    /**
+     * <code>int32 numberOfOffers = 2;</code>
+     * @param value The numberOfOffers to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNumberOfOffers(int value) {
+
+      numberOfOffers_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 numberOfOffers = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearNumberOfOffers() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      numberOfOffers_ = 0;
+      onChanged();
+      return this;
+    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -454,23 +520,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:StockUpit)
+    // @@protoc_insertion_point(builder_scope:AskRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:StockUpit)
-  private static final rs.raf.pds.v5.z2.gRPC.StockUpit DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:AskRequest)
+  private static final rs.raf.pds.v5.z2.gRPC.AskRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.StockUpit();
+    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.AskRequest();
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.StockUpit getDefaultInstance() {
+  public static rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<StockUpit>
-      PARSER = new com.google.protobuf.AbstractParser<StockUpit>() {
+  private static final com.google.protobuf.Parser<AskRequest>
+      PARSER = new com.google.protobuf.AbstractParser<AskRequest>() {
     @java.lang.Override
-    public StockUpit parsePartialFrom(
+    public AskRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -489,17 +555,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<StockUpit> parser() {
+  public static com.google.protobuf.Parser<AskRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<StockUpit> getParserForType() {
+  public com.google.protobuf.Parser<AskRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public rs.raf.pds.v5.z2.gRPC.StockUpit getDefaultInstanceForType() {
+  public rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
