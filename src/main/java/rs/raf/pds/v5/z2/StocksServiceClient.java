@@ -36,7 +36,6 @@ public class StocksServiceClient {
         StocksServiceGrpc.StocksServiceBlockingStub blockingStub = StocksServiceGrpc.newBlockingStub(channel);
         StocksServiceGrpc.StocksServiceStub asyncStub = StocksServiceGrpc.newStub(channel);
         Empty emptyRequest = Empty.newBuilder().build();
-
         Iterator<Stock> stocks = blockingStub.getAllStocks(emptyRequest);
         while (stocks.hasNext()) {
             Stock s = stocks.next();
@@ -140,7 +139,7 @@ public class StocksServiceClient {
             if ("/exit".equalsIgnoreCase(command)) {
                 break;
             } else if (command.startsWith("/buyOffer")) {
-            	String[] parts = command.split("\\s+");
+            	String[] parts = command.split("\\s+", 4);
             	if (parts.length == 4) {
 		            String symbol = parts[1].trim();
 		            double stockPrice = Double.parseDouble(parts[2].trim());
@@ -154,7 +153,7 @@ public class StocksServiceClient {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
 		        }
             } else if (command.startsWith("/sellOffer")) {
-            	String[] parts = command.split("\\s+");
+            	String[] parts = command.split("\\s+", 4);
             	if (parts.length == 4) {
 		            String symbol = parts[1].trim();
 		            double stockPrice = Double.parseDouble(parts[2].trim());
@@ -168,7 +167,7 @@ public class StocksServiceClient {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
 		        }
             } else if (command.startsWith("/getBuyOffers")) {
-            	String[] parts = command.split("\\s+");
+            	String[] parts = command.split("\\s+", 3);
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
 		            int numberOfOffers = Integer.parseInt(parts[2].trim());
@@ -179,7 +178,7 @@ public class StocksServiceClient {
 		        	System.out.println("Invalid getBuyOffers format, the expected format is /getBuyOffers symbol numberOfOffers");
 		        }
             } else if (command.startsWith("/getSellOffers")) {
-            	String[] parts = command.split("\\s+");
+            	String[] parts = command.split("\\s+", 3);
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
 		            int numberOfOffers = Integer.parseInt(parts[2].trim());
@@ -222,9 +221,9 @@ public class StocksServiceClient {
 
         double changeInPrice = stock.getChangeInPrice();
         if (changeInPrice > 0) {
-            System.out.print(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + " \u2191").reset());
+            System.out.print(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + "↑ \u2191").reset());
         } else if (changeInPrice < 0) {
-            System.out.print(Ansi.ansi().fgRed().a(String.format("%.2f", changeInPrice) + " \u2193").reset());
+            System.out.print(Ansi.ansi().fgRed().a(String.format("%.2f", changeInPrice) + "↓ \u2193").reset());
         } else {
             System.out.print(String.format("%.2f", changeInPrice));
         }
