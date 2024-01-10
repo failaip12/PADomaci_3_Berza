@@ -36,4 +36,16 @@ public interface OfferOrBuilder extends
    * @return The buy.
    */
   boolean getBuy();
+
+  /**
+   * <code>string clientId = 5;</code>
+   * @return The clientId.
+   */
+  java.lang.String getClientId();
+  /**
+   * <code>string clientId = 5;</code>
+   * @return The bytes for clientId.
+   */
+  com.google.protobuf.ByteString
+      getClientIdBytes();
 }

@@ -4,119 +4,47 @@
 package rs.raf.pds.v5.z2.gRPC;
 
 /**
- * Protobuf type {@code Offer}
+ * Protobuf type {@code TransactionNotification}
  */
-public final class Offer extends
+public final class TransactionNotification extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:Offer)
-    OfferOrBuilder {
+    // @@protoc_insertion_point(message_implements:TransactionNotification)
+    TransactionNotificationOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use Offer.newBuilder() to construct.
-  private Offer(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use TransactionNotification.newBuilder() to construct.
+  private TransactionNotification(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private Offer() {
-    symbol_ = "";
+  private TransactionNotification() {
     clientId_ = "";
+    symbol_ = "";
   }
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new Offer();
+    return new TransactionNotification();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_Offer_descriptor;
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionNotification_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_Offer_fieldAccessorTable
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionNotification_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            rs.raf.pds.v5.z2.gRPC.Offer.class, rs.raf.pds.v5.z2.gRPC.Offer.Builder.class);
+            rs.raf.pds.v5.z2.gRPC.TransactionNotification.class, rs.raf.pds.v5.z2.gRPC.TransactionNotification.Builder.class);
   }
 
-  public static final int SYMBOL_FIELD_NUMBER = 1;
-  @SuppressWarnings("serial")
-  private volatile java.lang.Object symbol_ = "";
-  /**
-   * <code>string symbol = 1;</code>
-   * @return The symbol.
-   */
-  @java.lang.Override
-  public java.lang.String getSymbol() {
-    java.lang.Object ref = symbol_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      symbol_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string symbol = 1;</code>
-   * @return The bytes for symbol.
-   */
-  @java.lang.Override
-  public com.google.protobuf.ByteString
-      getSymbolBytes() {
-    java.lang.Object ref = symbol_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      symbol_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int STOCKPRICE_FIELD_NUMBER = 2;
-  private double stockPrice_ = 0D;
-  /**
-   * <code>double stockPrice = 2;</code>
-   * @return The stockPrice.
-   */
-  @java.lang.Override
-  public double getStockPrice() {
-    return stockPrice_;
-  }
-
-  public static final int NUMBEROFOFFERS_FIELD_NUMBER = 3;
-  private int numberOfOffers_ = 0;
-  /**
-   * <code>int32 numberOfOffers = 3;</code>
-   * @return The numberOfOffers.
-   */
-  @java.lang.Override
-  public int getNumberOfOffers() {
-    return numberOfOffers_;
-  }
-
-  public static final int BUY_FIELD_NUMBER = 4;
-  private boolean buy_ = false;
-  /**
-   * <code>bool buy = 4;</code>
-   * @return The buy.
-   */
-  @java.lang.Override
-  public boolean getBuy() {
-    return buy_;
-  }
-
-  public static final int CLIENTID_FIELD_NUMBER = 5;
+  public static final int CLIENTID_FIELD_NUMBER = 1;
   @SuppressWarnings("serial")
   private volatile java.lang.Object clientId_ = "";
   /**
-   * <code>string clientId = 5;</code>
+   * <code>string clientId = 1;</code>
    * @return The clientId.
    */
   @java.lang.Override
@@ -133,7 +61,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string clientId = 5;</code>
+   * <code>string clientId = 1;</code>
    * @return The bytes for clientId.
    */
   @java.lang.Override
@@ -151,6 +79,67 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SYMBOL_FIELD_NUMBER = 2;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object symbol_ = "";
+  /**
+   * <code>string symbol = 2;</code>
+   * @return The symbol.
+   */
+  @java.lang.Override
+  public java.lang.String getSymbol() {
+    java.lang.Object ref = symbol_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      symbol_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string symbol = 2;</code>
+   * @return The bytes for symbol.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getSymbolBytes() {
+    java.lang.Object ref = symbol_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      symbol_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int PRICE_FIELD_NUMBER = 3;
+  private double price_ = 0D;
+  /**
+   * <code>double price = 3;</code>
+   * @return The price.
+   */
+  @java.lang.Override
+  public double getPrice() {
+    return price_;
+  }
+
+  public static final int NUMBEROFSHARES_FIELD_NUMBER = 4;
+  private int numberOfShares_ = 0;
+  /**
+   * <code>int32 numberOfShares = 4;</code>
+   * @return The numberOfShares.
+   */
+  @java.lang.Override
+  public int getNumberOfShares() {
+    return numberOfShares_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -165,20 +154,17 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, symbol_);
-    }
-    if (java.lang.Double.doubleToRawLongBits(stockPrice_) != 0) {
-      output.writeDouble(2, stockPrice_);
-    }
-    if (numberOfOffers_ != 0) {
-      output.writeInt32(3, numberOfOffers_);
-    }
-    if (buy_ != false) {
-      output.writeBool(4, buy_);
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientId_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, clientId_);
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, clientId_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, symbol_);
+    }
+    if (java.lang.Double.doubleToRawLongBits(price_) != 0) {
+      output.writeDouble(3, price_);
+    }
+    if (numberOfShares_ != 0) {
+      output.writeInt32(4, numberOfShares_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -189,23 +175,19 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, symbol_);
-    }
-    if (java.lang.Double.doubleToRawLongBits(stockPrice_) != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeDoubleSize(2, stockPrice_);
-    }
-    if (numberOfOffers_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(3, numberOfOffers_);
-    }
-    if (buy_ != false) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(4, buy_);
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(clientId_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, clientId_);
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, clientId_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, symbol_);
+    }
+    if (java.lang.Double.doubleToRawLongBits(price_) != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeDoubleSize(3, price_);
+    }
+    if (numberOfShares_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(4, numberOfShares_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -217,22 +199,20 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.Offer)) {
+    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.TransactionNotification)) {
       return super.equals(obj);
     }
-    rs.raf.pds.v5.z2.gRPC.Offer other = (rs.raf.pds.v5.z2.gRPC.Offer) obj;
+    rs.raf.pds.v5.z2.gRPC.TransactionNotification other = (rs.raf.pds.v5.z2.gRPC.TransactionNotification) obj;
 
-    if (!getSymbol()
-        .equals(other.getSymbol())) return false;
-    if (java.lang.Double.doubleToLongBits(getStockPrice())
-        != java.lang.Double.doubleToLongBits(
-            other.getStockPrice())) return false;
-    if (getNumberOfOffers()
-        != other.getNumberOfOffers()) return false;
-    if (getBuy()
-        != other.getBuy()) return false;
     if (!getClientId()
         .equals(other.getClientId())) return false;
+    if (!getSymbol()
+        .equals(other.getSymbol())) return false;
+    if (java.lang.Double.doubleToLongBits(getPrice())
+        != java.lang.Double.doubleToLongBits(
+            other.getPrice())) return false;
+    if (getNumberOfShares()
+        != other.getNumberOfShares()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -244,86 +224,83 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
-    hash = (53 * hash) + getSymbol().hashCode();
-    hash = (37 * hash) + STOCKPRICE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        java.lang.Double.doubleToLongBits(getStockPrice()));
-    hash = (37 * hash) + NUMBEROFOFFERS_FIELD_NUMBER;
-    hash = (53 * hash) + getNumberOfOffers();
-    hash = (37 * hash) + BUY_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getBuy());
     hash = (37 * hash) + CLIENTID_FIELD_NUMBER;
     hash = (53 * hash) + getClientId().hashCode();
+    hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
+    hash = (53 * hash) + getSymbol().hashCode();
+    hash = (37 * hash) + PRICE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getPrice()));
+    hash = (37 * hash) + NUMBEROFSHARES_FIELD_NUMBER;
+    hash = (53 * hash) + getNumberOfShares();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(byte[] data)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseDelimitedFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseDelimitedFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.Offer parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -336,7 +313,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.Offer prototype) {
+  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.TransactionNotification prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -352,26 +329,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code Offer}
+   * Protobuf type {@code TransactionNotification}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:Offer)
-      rs.raf.pds.v5.z2.gRPC.OfferOrBuilder {
+      // @@protoc_insertion_point(builder_implements:TransactionNotification)
+      rs.raf.pds.v5.z2.gRPC.TransactionNotificationOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_Offer_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionNotification_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_Offer_fieldAccessorTable
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionNotification_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              rs.raf.pds.v5.z2.gRPC.Offer.class, rs.raf.pds.v5.z2.gRPC.Offer.Builder.class);
+              rs.raf.pds.v5.z2.gRPC.TransactionNotification.class, rs.raf.pds.v5.z2.gRPC.TransactionNotification.Builder.class);
     }
 
-    // Construct using rs.raf.pds.v5.z2.gRPC.Offer.newBuilder()
+    // Construct using rs.raf.pds.v5.z2.gRPC.TransactionNotification.newBuilder()
     private Builder() {
 
     }
@@ -385,28 +362,27 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      symbol_ = "";
-      stockPrice_ = 0D;
-      numberOfOffers_ = 0;
-      buy_ = false;
       clientId_ = "";
+      symbol_ = "";
+      price_ = 0D;
+      numberOfShares_ = 0;
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_Offer_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionNotification_descriptor;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.Offer getDefaultInstanceForType() {
-      return rs.raf.pds.v5.z2.gRPC.Offer.getDefaultInstance();
+    public rs.raf.pds.v5.z2.gRPC.TransactionNotification getDefaultInstanceForType() {
+      return rs.raf.pds.v5.z2.gRPC.TransactionNotification.getDefaultInstance();
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.Offer build() {
-      rs.raf.pds.v5.z2.gRPC.Offer result = buildPartial();
+    public rs.raf.pds.v5.z2.gRPC.TransactionNotification build() {
+      rs.raf.pds.v5.z2.gRPC.TransactionNotification result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -414,62 +390,56 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.Offer buildPartial() {
-      rs.raf.pds.v5.z2.gRPC.Offer result = new rs.raf.pds.v5.z2.gRPC.Offer(this);
+    public rs.raf.pds.v5.z2.gRPC.TransactionNotification buildPartial() {
+      rs.raf.pds.v5.z2.gRPC.TransactionNotification result = new rs.raf.pds.v5.z2.gRPC.TransactionNotification(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.Offer result) {
+    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.TransactionNotification result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.symbol_ = symbol_;
+        result.clientId_ = clientId_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.stockPrice_ = stockPrice_;
+        result.symbol_ = symbol_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.numberOfOffers_ = numberOfOffers_;
+        result.price_ = price_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
-        result.buy_ = buy_;
-      }
-      if (((from_bitField0_ & 0x00000010) != 0)) {
-        result.clientId_ = clientId_;
+        result.numberOfShares_ = numberOfShares_;
       }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof rs.raf.pds.v5.z2.gRPC.Offer) {
-        return mergeFrom((rs.raf.pds.v5.z2.gRPC.Offer)other);
+      if (other instanceof rs.raf.pds.v5.z2.gRPC.TransactionNotification) {
+        return mergeFrom((rs.raf.pds.v5.z2.gRPC.TransactionNotification)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.Offer other) {
-      if (other == rs.raf.pds.v5.z2.gRPC.Offer.getDefaultInstance()) return this;
-      if (!other.getSymbol().isEmpty()) {
-        symbol_ = other.symbol_;
+    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.TransactionNotification other) {
+      if (other == rs.raf.pds.v5.z2.gRPC.TransactionNotification.getDefaultInstance()) return this;
+      if (!other.getClientId().isEmpty()) {
+        clientId_ = other.clientId_;
         bitField0_ |= 0x00000001;
         onChanged();
       }
-      if (other.getStockPrice() != 0D) {
-        setStockPrice(other.getStockPrice());
-      }
-      if (other.getNumberOfOffers() != 0) {
-        setNumberOfOffers(other.getNumberOfOffers());
-      }
-      if (other.getBuy() != false) {
-        setBuy(other.getBuy());
-      }
-      if (!other.getClientId().isEmpty()) {
-        clientId_ = other.clientId_;
-        bitField0_ |= 0x00000010;
+      if (!other.getSymbol().isEmpty()) {
+        symbol_ = other.symbol_;
+        bitField0_ |= 0x00000002;
         onChanged();
+      }
+      if (other.getPrice() != 0D) {
+        setPrice(other.getPrice());
+      }
+      if (other.getNumberOfShares() != 0) {
+        setNumberOfShares(other.getNumberOfShares());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -498,30 +468,25 @@ private static final long serialVersionUID = 0L;
               done = true;
               break;
             case 10: {
-              symbol_ = input.readStringRequireUtf8();
+              clientId_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000001;
               break;
             } // case 10
-            case 17: {
-              stockPrice_ = input.readDouble();
+            case 18: {
+              symbol_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
-            } // case 17
-            case 24: {
-              numberOfOffers_ = input.readInt32();
+            } // case 18
+            case 25: {
+              price_ = input.readDouble();
               bitField0_ |= 0x00000004;
               break;
-            } // case 24
+            } // case 25
             case 32: {
-              buy_ = input.readBool();
+              numberOfShares_ = input.readInt32();
               bitField0_ |= 0x00000008;
               break;
             } // case 32
-            case 42: {
-              clientId_ = input.readStringRequireUtf8();
-              bitField0_ |= 0x00000010;
-              break;
-            } // case 42
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -539,177 +504,9 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.lang.Object symbol_ = "";
-    /**
-     * <code>string symbol = 1;</code>
-     * @return The symbol.
-     */
-    public java.lang.String getSymbol() {
-      java.lang.Object ref = symbol_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        symbol_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string symbol = 1;</code>
-     * @return The bytes for symbol.
-     */
-    public com.google.protobuf.ByteString
-        getSymbolBytes() {
-      java.lang.Object ref = symbol_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        symbol_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string symbol = 1;</code>
-     * @param value The symbol to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSymbol(
-        java.lang.String value) {
-      if (value == null) { throw new NullPointerException(); }
-      symbol_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string symbol = 1;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearSymbol() {
-      symbol_ = getDefaultInstance().getSymbol();
-      bitField0_ = (bitField0_ & ~0x00000001);
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string symbol = 1;</code>
-     * @param value The bytes for symbol to set.
-     * @return This builder for chaining.
-     */
-    public Builder setSymbolBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) { throw new NullPointerException(); }
-      checkByteStringIsUtf8(value);
-      symbol_ = value;
-      bitField0_ |= 0x00000001;
-      onChanged();
-      return this;
-    }
-
-    private double stockPrice_ ;
-    /**
-     * <code>double stockPrice = 2;</code>
-     * @return The stockPrice.
-     */
-    @java.lang.Override
-    public double getStockPrice() {
-      return stockPrice_;
-    }
-    /**
-     * <code>double stockPrice = 2;</code>
-     * @param value The stockPrice to set.
-     * @return This builder for chaining.
-     */
-    public Builder setStockPrice(double value) {
-
-      stockPrice_ = value;
-      bitField0_ |= 0x00000002;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>double stockPrice = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearStockPrice() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      stockPrice_ = 0D;
-      onChanged();
-      return this;
-    }
-
-    private int numberOfOffers_ ;
-    /**
-     * <code>int32 numberOfOffers = 3;</code>
-     * @return The numberOfOffers.
-     */
-    @java.lang.Override
-    public int getNumberOfOffers() {
-      return numberOfOffers_;
-    }
-    /**
-     * <code>int32 numberOfOffers = 3;</code>
-     * @param value The numberOfOffers to set.
-     * @return This builder for chaining.
-     */
-    public Builder setNumberOfOffers(int value) {
-
-      numberOfOffers_ = value;
-      bitField0_ |= 0x00000004;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>int32 numberOfOffers = 3;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearNumberOfOffers() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      numberOfOffers_ = 0;
-      onChanged();
-      return this;
-    }
-
-    private boolean buy_ ;
-    /**
-     * <code>bool buy = 4;</code>
-     * @return The buy.
-     */
-    @java.lang.Override
-    public boolean getBuy() {
-      return buy_;
-    }
-    /**
-     * <code>bool buy = 4;</code>
-     * @param value The buy to set.
-     * @return This builder for chaining.
-     */
-    public Builder setBuy(boolean value) {
-
-      buy_ = value;
-      bitField0_ |= 0x00000008;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>bool buy = 4;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearBuy() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      buy_ = false;
-      onChanged();
-      return this;
-    }
-
     private java.lang.Object clientId_ = "";
     /**
-     * <code>string clientId = 5;</code>
+     * <code>string clientId = 1;</code>
      * @return The clientId.
      */
     public java.lang.String getClientId() {
@@ -725,7 +522,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string clientId = 5;</code>
+     * <code>string clientId = 1;</code>
      * @return The bytes for clientId.
      */
     public com.google.protobuf.ByteString
@@ -742,7 +539,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string clientId = 5;</code>
+     * <code>string clientId = 1;</code>
      * @param value The clientId to set.
      * @return This builder for chaining.
      */
@@ -750,22 +547,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       clientId_ = value;
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
     /**
-     * <code>string clientId = 5;</code>
+     * <code>string clientId = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearClientId() {
       clientId_ = getDefaultInstance().getClientId();
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
     /**
-     * <code>string clientId = 5;</code>
+     * <code>string clientId = 1;</code>
      * @param value The bytes for clientId to set.
      * @return This builder for chaining.
      */
@@ -774,7 +571,143 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       clientId_ = value;
-      bitField0_ |= 0x00000010;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object symbol_ = "";
+    /**
+     * <code>string symbol = 2;</code>
+     * @return The symbol.
+     */
+    public java.lang.String getSymbol() {
+      java.lang.Object ref = symbol_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        symbol_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string symbol = 2;</code>
+     * @return The bytes for symbol.
+     */
+    public com.google.protobuf.ByteString
+        getSymbolBytes() {
+      java.lang.Object ref = symbol_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        symbol_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string symbol = 2;</code>
+     * @param value The symbol to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSymbol(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      symbol_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string symbol = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSymbol() {
+      symbol_ = getDefaultInstance().getSymbol();
+      bitField0_ = (bitField0_ & ~0x00000002);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string symbol = 2;</code>
+     * @param value The bytes for symbol to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSymbolBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      symbol_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+
+    private double price_ ;
+    /**
+     * <code>double price = 3;</code>
+     * @return The price.
+     */
+    @java.lang.Override
+    public double getPrice() {
+      return price_;
+    }
+    /**
+     * <code>double price = 3;</code>
+     * @param value The price to set.
+     * @return This builder for chaining.
+     */
+    public Builder setPrice(double value) {
+
+      price_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>double price = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearPrice() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      price_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private int numberOfShares_ ;
+    /**
+     * <code>int32 numberOfShares = 4;</code>
+     * @return The numberOfShares.
+     */
+    @java.lang.Override
+    public int getNumberOfShares() {
+      return numberOfShares_;
+    }
+    /**
+     * <code>int32 numberOfShares = 4;</code>
+     * @param value The numberOfShares to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNumberOfShares(int value) {
+
+      numberOfShares_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 numberOfShares = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearNumberOfShares() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      numberOfShares_ = 0;
       onChanged();
       return this;
     }
@@ -791,23 +724,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:Offer)
+    // @@protoc_insertion_point(builder_scope:TransactionNotification)
   }
 
-  // @@protoc_insertion_point(class_scope:Offer)
-  private static final rs.raf.pds.v5.z2.gRPC.Offer DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:TransactionNotification)
+  private static final rs.raf.pds.v5.z2.gRPC.TransactionNotification DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.Offer();
+    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.TransactionNotification();
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.Offer getDefaultInstance() {
+  public static rs.raf.pds.v5.z2.gRPC.TransactionNotification getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<Offer>
-      PARSER = new com.google.protobuf.AbstractParser<Offer>() {
+  private static final com.google.protobuf.Parser<TransactionNotification>
+      PARSER = new com.google.protobuf.AbstractParser<TransactionNotification>() {
     @java.lang.Override
-    public Offer parsePartialFrom(
+    public TransactionNotification parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -826,17 +759,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<Offer> parser() {
+  public static com.google.protobuf.Parser<TransactionNotification> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<Offer> getParserForType() {
+  public com.google.protobuf.Parser<TransactionNotification> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public rs.raf.pds.v5.z2.gRPC.Offer getDefaultInstanceForType() {
+  public rs.raf.pds.v5.z2.gRPC.TransactionNotification getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

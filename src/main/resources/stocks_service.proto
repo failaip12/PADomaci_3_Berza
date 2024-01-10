@@ -4,7 +4,10 @@ option java_multiple_files = true;
 option java_package = "rs.raf.pds.v5.z2.gRPC";
 
 service StocksService {
+	rpc GetUniqueId(Empty) returns (ClientId) {}
+
 	rpc GetStock(StockRequest) returns (Stock) {}
+
 	rpc GetAllStocks(Empty) returns (stream Stock) {}
 
 	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
@@ -12,6 +15,8 @@ service StocksService {
 	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
 	rpc AddOffer(Offer) returns (Empty) {}
+
+	rpc SubToTransactions(ClientId) returns (TransactionNotification) {}
 }
 
 message Stock {
@@ -41,6 +46,16 @@ message Offer {
 	double stockPrice = 2;
 	int32 numberOfOffers = 3;
 	bool buy = 4;
+	string clientId = 5;
+}
+message TransactionNotification {
+	string clientId = 1;
+    string symbol = 2;
+    double price = 3;
+    int32 numberOfShares = 4;
+}
+message ClientId {
+	string clientId = 1;
 }
 
-message Empty {}  // Define an Empty message
+message Empty {}

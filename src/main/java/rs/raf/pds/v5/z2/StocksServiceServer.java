@@ -7,13 +7,15 @@ import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
+import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
+import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -39,17 +41,36 @@ public class StocksServiceServer {
         private ConcurrentMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>>();
         
         private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
+        private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
             initUnos();
-            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 30, TimeUnit.SECONDS);
+            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 5, TimeUnit.SECONDS);
         }
 
         private void initUnos() {
             for (Stock s : InitialData.initStocks()) {
                 symbolStockMap.put(s.getSymbol(), s);
             }
+        }
+        
+        @Override
+        public void getUniqueId(Empty request, StreamObserver<ClientId> responseObserver) {
+            String clientId = UUID.randomUUID().toString();
+            
+            ClientId response = ClientId.newBuilder()
+                    .setClientId(clientId)
+                    .build();
+            
+            // Send the response to the client
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        }
+        
+        @Override
+        public void subToTransactions(ClientId request, StreamObserver<TransactionNotification> responseObserver) {
+        	idTransObserverMap.put(request.getClientId(), responseObserver);
         }
         
         @Override
@@ -73,7 +94,7 @@ public class StocksServiceServer {
             CopyOnWriteArrayList<Offer> offerList = stockOffersMap.get(symbolStockMap.get(request.getSymbol()));
             if (offerList != null) {
                 List<Offer> offers = offerList.stream()
-                        .filter(offer -> !request.getAsk())
+                        .filter(offer -> (request.getAsk() && !offer.getBuy()) || (!request.getAsk() && offer.getBuy()))
                         .sorted(Comparator.comparingDouble(Offer::getStockPrice))
                         .limit(request.getNumberOfOffers())
                         .collect(Collectors.toList());
@@ -83,6 +104,7 @@ public class StocksServiceServer {
                 }
             }
         }
+
 
         
         @Override
@@ -94,10 +116,83 @@ public class StocksServiceServer {
             	offers = new CopyOnWriteArrayList<>();
                 stockOffersMap.put(stock, offers);
             }
-
-            offers.add(request);
-
+            Boolean found = false;
+            for (Offer offer:offers) {
+            	if(!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()) {
+            		int numberOfOffersOffer = 0;
+            		if(offer.getNumberOfOffers() > request.getNumberOfOffers()) {
+            			numberOfOffersOffer = offer.getNumberOfOffers() - request.getNumberOfOffers();
+                		Offer updatedOffer = Offer.newBuilder()
+   							 .setBuy(offer.getBuy())
+   							 .setClientId(offer.getClientId())
+   							 .setStockPrice(offer.getStockPrice())
+   							 .setSymbol(offer.getSymbol())
+   							 .setNumberOfOffers(numberOfOffersOffer).build();
+                		//update offer in list with updated offer
+                		responseObserver.onNext(Empty.newBuilder().build());
+                		responseObserver.onCompleted();
+                		notifyTransaction(request, updatedOffer); //TODO fix this 
+                		offers.set(offers.indexOf(offer), updatedOffer);
+            		}
+            		else if(offer.getNumberOfOffers() < request.getNumberOfOffers()) {
+                        numberOfOffersOffer = request.getNumberOfOffers() - offer.getNumberOfOffers();
+                        Offer updatedRequest = Offer.newBuilder()
+                                .setBuy(request.getBuy())
+                                .setClientId(request.getClientId())
+                                .setStockPrice(request.getStockPrice())
+                                .setSymbol(request.getSymbol())
+                                .setNumberOfOffers(numberOfOffersOffer).build();
+                		//update request with updated offer, put it in list and remove offer from list
+                        responseObserver.onNext(Empty.newBuilder().build());
+                        responseObserver.onCompleted();
+                		notifyTransaction(updatedRequest, offer); //TODO fix this 
+                        offers.add(updatedRequest);
+                        offers.remove(offer);
+            		}
+            		else {
+                		//remove offer from list
+            			responseObserver.onNext(Empty.newBuilder().build());
+            			responseObserver.onCompleted();
+            			notifyTransaction(offer, request); //TODO fix this 
+                		offers.remove(offer);
+            		}
+            		//notify both parties
+                    found = true;
+            	}
+            }
+            if(!found) {
+	            offers.add(request);
+            }
             stockOffersMap.put(stock, offers);
+        }
+        
+        private void notifyTransaction(Offer buyOffer, Offer sellOffer) {
+        	TransactionNotification transactionNotificationBuyer = TransactionNotification.newBuilder()
+                    .setClientId(buyOffer.getClientId())
+                    .setSymbol(buyOffer.getSymbol())
+                    .setPrice(buyOffer.getStockPrice())
+                    .setNumberOfShares(buyOffer.getNumberOfOffers())
+                    .build();
+        	
+        	TransactionNotification transactionNotificationSeller = TransactionNotification.newBuilder()
+                    .setClientId(sellOffer.getClientId())
+                    .setSymbol(sellOffer.getSymbol())
+                    .setPrice(sellOffer.getStockPrice())
+                    .setNumberOfShares(sellOffer.getNumberOfOffers())
+                    .build();
+        	
+            StreamObserver<TransactionNotification> buyerObserver = idTransObserverMap.get(buyOffer.getClientId());
+            StreamObserver<TransactionNotification> sellerObserver = idTransObserverMap.get(sellOffer.getClientId());
+
+            // Notify the buyers and sellers
+            if (buyerObserver != null) {
+            	System.out.println("NIGGA");
+            	buyerObserver.onNext(transactionNotificationBuyer);
+            }
+            if (sellerObserver != null) {
+            	System.out.println("NIGGA2");
+            	sellerObserver.onNext(transactionNotificationSeller);
+            }
         }
         
         private void sendUpdates() {

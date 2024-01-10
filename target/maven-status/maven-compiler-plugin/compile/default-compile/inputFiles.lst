@@ -2,13 +2,17 @@ C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\S
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\StocksServiceClient.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\OfferOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\StockOrBuilder.java
+C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\TransactionNotification.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\Stock.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\AskBidRequest.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\AskBidRequestOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\EmptyOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\StockRequest.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\InitialData.java
+C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\ClientId.java
+C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\ClientIdOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\Offer.java
+C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\TransactionNotificationOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\SubscribeUpitOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\StockRequestOrBuilder.java
 C:\Filip_projekti\Poslovne_app\PADomaci_3_Berza\src\main\java\rs\raf\pds\v5\z2\gRPC\SubscribeUpit.java

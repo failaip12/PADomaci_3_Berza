@@ -7,11 +7,13 @@ import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
 
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
+import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
+import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,9 +33,31 @@ public class StocksServiceClient {
                 .usePlaintext()
                 .build();
 
+        
+        StreamObserver<TransactionNotification> transactionNotificationObserver = new StreamObserver<TransactionNotification>() {
+            @Override
+            public void onNext(TransactionNotification transactionNotification) {
+                System.out.println("Transaction Notification:");
+                System.out.println("Symbol: " + transactionNotification.getSymbol());
+                System.out.println("Price: " + transactionNotification.getPrice());
+                System.out.println("Number of Shares: " + transactionNotification.getNumberOfShares());
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error occurred in transaction notification: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                // Handle completion if needed
+            }
+        };
+        
         StocksServiceGrpc.StocksServiceBlockingStub blockingStub = StocksServiceGrpc.newBlockingStub(channel);
         StocksServiceGrpc.StocksServiceStub asyncStub = StocksServiceGrpc.newStub(channel);
         Empty emptyRequest = Empty.newBuilder().build();
+        String clientId = blockingStub.getUniqueId(emptyRequest).getClientId();
         Iterator<Stock> stocks = blockingStub.getAllStocks(emptyRequest);
         while (stocks.hasNext()) {
             Stock s = stocks.next();
@@ -117,6 +141,7 @@ public class StocksServiceClient {
 
         // Subscribe to the stocks
         asyncStub.subscribeStocks(subscriptionRequest, responseObserverSubscribe);
+        asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
         String command;
         while (true) {
             System.out.print("Enter command (/exit to exit): ");
@@ -134,7 +159,8 @@ public class StocksServiceClient {
 	            			.setSymbol(symbol)
 	            			.setStockPrice(stockPrice)
 	            			.setNumberOfOffers(numberOfOffers)
-	            			.setBuy(true).build()
+	            			.setBuy(true)
+	            			.setClientId(clientId).build()
 	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
@@ -149,7 +175,8 @@ public class StocksServiceClient {
 	            			.setSymbol(symbol)
 	            			.setStockPrice(stockPrice)
 	            			.setNumberOfOffers(numberOfOffers)
-	            			.setBuy(false).build()
+	            			.setBuy(false)
+	            			.setClientId(clientId).build()
 	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
