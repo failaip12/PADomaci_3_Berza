@@ -9,11 +9,9 @@ service StocksService {
 
 	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
 
-	rpc GetBuyOffers(BidRequest) returns (stream BuyOffer) {}
-	rpc GetSellOffers(AskRequest) returns (stream SellOffer) {}
+	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
-	rpc AddBuyOffer(BuyOffer) returns (Empty) {}
-	rpc AddSellOffer(SellOffer) returns (Empty) {}
+	rpc AddOffer(Offer) returns (Empty) {}
 }
 
 message Stock {
@@ -32,26 +30,17 @@ message StockRequest {
     string symbol = 1;
 }
 
-message BidRequest {
+message AskBidRequest {
 	string symbol = 1;
 	int32 numberOfOffers = 2;
+	bool ask = 3;
 }
 
-message AskRequest {
-	string symbol = 1;
-	int32 numberOfOffers = 2;
-}
-
-message BuyOffer {
+message Offer {
 	string symbol = 1;
 	double stockPrice = 2;
 	int32 numberOfOffers = 3;
-}
-
-message SellOffer {
-	string symbol = 1;
-	double stockPrice = 2;
-	int32 numberOfOffers = 3;
+	bool buy = 4;
 }
 
 message Empty {}  // Define an Empty message

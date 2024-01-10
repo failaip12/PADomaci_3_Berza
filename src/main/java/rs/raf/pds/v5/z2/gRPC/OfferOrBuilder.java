@@ -3,8 +3,8 @@
 
 package rs.raf.pds.v5.z2.gRPC;
 
-public interface SellOfferOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:SellOffer)
+public interface OfferOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:Offer)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -30,4 +30,10 @@ public interface SellOfferOrBuilder extends
    * @return The numberOfOffers.
    */
   int getNumberOfOffers();
+
+  /**
+   * <code>bool buy = 4;</code>
+   * @return The buy.
+   */
+  boolean getBuy();
 }

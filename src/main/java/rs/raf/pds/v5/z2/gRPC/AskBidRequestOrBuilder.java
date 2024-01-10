@@ -3,8 +3,8 @@
 
 package rs.raf.pds.v5.z2.gRPC;
 
-public interface BuyOfferOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:BuyOffer)
+public interface AskBidRequestOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:AskBidRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -20,14 +20,14 @@ public interface BuyOfferOrBuilder extends
       getSymbolBytes();
 
   /**
-   * <code>double stockPrice = 2;</code>
-   * @return The stockPrice.
-   */
-  double getStockPrice();
-
-  /**
-   * <code>int32 numberOfOffers = 3;</code>
+   * <code>int32 numberOfOffers = 2;</code>
    * @return The numberOfOffers.
    */
   int getNumberOfOffers();
+
+  /**
+   * <code>bool ask = 3;</code>
+   * @return The ask.
+   */
+  boolean getAsk();
 }

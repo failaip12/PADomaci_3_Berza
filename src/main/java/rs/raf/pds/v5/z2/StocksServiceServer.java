@@ -4,11 +4,9 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import rs.raf.pds.v5.z2.gRPC.Empty;
+import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
-import rs.raf.pds.v5.z2.gRPC.SellOffer;
-import rs.raf.pds.v5.z2.gRPC.AskRequest;
-import rs.raf.pds.v5.z2.gRPC.BidRequest;
-import rs.raf.pds.v5.z2.gRPC.BuyOffer;
+import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 
@@ -22,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class StocksServiceServer {
 
@@ -39,8 +38,7 @@ public class StocksServiceServer {
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
         private ConcurrentMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>>();
         
-        private ConcurrentMap<Stock, CopyOnWriteArrayList<SellOffer>> stockSellOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<SellOffer>>();
-        private ConcurrentMap<Stock, CopyOnWriteArrayList<BuyOffer>> stockBuyOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<BuyOffer>>();
+        private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
@@ -69,59 +67,37 @@ public class StocksServiceServer {
             }
         }
         
-        @Override
-        public void getBuyOffers(BidRequest request, StreamObserver<BuyOffer> responseObserver) {
-        	CopyOnWriteArrayList<BuyOffer> buyOfferList = stockBuyOffersMap.get(symbolStockMap.get(request.getSymbol()));
-        	if(buyOfferList != null) {
-	        	Collections.sort(buyOfferList, Comparator.comparingDouble(BuyOffer::getStockPrice).reversed());
-	        	List<BuyOffer> highestOffers = buyOfferList.subList(0, Math.min(request.getNumberOfOffers(), buyOfferList.size()));
-	            for (BuyOffer buyOffer : highestOffers) {
-	            	responseObserver.onNext(buyOffer);
-	            }
-        	}
-        }
-        
         
         @Override
-        public void getSellOffers(AskRequest request, StreamObserver<SellOffer> responseObserver) {
-        	CopyOnWriteArrayList<SellOffer> sellOfferList = stockSellOffersMap.get(symbolStockMap.get(request.getSymbol()));
-        	if(sellOfferList != null) {
-	        	Collections.sort(sellOfferList, Comparator.comparingDouble(SellOffer::getStockPrice));
-	        	List<SellOffer> highestOffers = sellOfferList.subList(0, Math.min(request.getNumberOfOffers(), sellOfferList.size()));
-	            for (SellOffer sellOffer : highestOffers) {
-	            	responseObserver.onNext(sellOffer);
-	            }
-        	}
-        }
-        
-        @Override
-        public void addBuyOffer(BuyOffer request, StreamObserver<Empty> responseObserver) {
-        	Stock stock = symbolStockMap.get(request.getSymbol());
-            CopyOnWriteArrayList<BuyOffer> buyOffers = stockBuyOffersMap.get(stock);
+        public void getOffers(AskBidRequest request, StreamObserver<Offer> responseObserver) {
+            CopyOnWriteArrayList<Offer> offerList = stockOffersMap.get(symbolStockMap.get(request.getSymbol()));
+            if (offerList != null) {
+                List<Offer> offers = offerList.stream()
+                        .filter(offer -> !request.getAsk())
+                        .sorted(Comparator.comparingDouble(Offer::getStockPrice))
+                        .limit(request.getNumberOfOffers())
+                        .collect(Collectors.toList());
 
-            if (buyOffers == null) {
-                buyOffers = new CopyOnWriteArrayList<>();
-                stockBuyOffersMap.put(stock, buyOffers);
+                for (Offer offer : offers) {
+                    responseObserver.onNext(offer);
+                }
+            }
+        }
+
+        
+        @Override
+        public void addOffer(Offer request, StreamObserver<Empty> responseObserver) {
+        	Stock stock = symbolStockMap.get(request.getSymbol());
+            CopyOnWriteArrayList<Offer> offers = stockOffersMap.get(stock);
+
+            if (offers == null) {
+            	offers = new CopyOnWriteArrayList<>();
+                stockOffersMap.put(stock, offers);
             }
 
-            buyOffers.add(request);
+            offers.add(request);
 
-            stockBuyOffersMap.put(stock, buyOffers);
-        }
-        
-        @Override
-        public void addSellOffer(SellOffer request, StreamObserver<Empty> responseObserver) {
-        	Stock stock = symbolStockMap.get(request.getSymbol());
-            CopyOnWriteArrayList<SellOffer> sellOffers = stockSellOffersMap.get(stock);
-
-            if (sellOffers == null) {
-            	sellOffers = new CopyOnWriteArrayList<>();
-                stockSellOffersMap.put(stock, sellOffers);
-            }
-
-            sellOffers.add(request);
-
-            stockSellOffersMap.put(stock, sellOffers);
+            stockOffersMap.put(stock, offers);
         }
         
         private void sendUpdates() {

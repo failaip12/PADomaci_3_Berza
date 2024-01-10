@@ -6,11 +6,9 @@ import io.grpc.stub.StreamObserver;
 import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
 
-import rs.raf.pds.v5.z2.gRPC.AskRequest;
-import rs.raf.pds.v5.z2.gRPC.BidRequest;
-import rs.raf.pds.v5.z2.gRPC.BuyOffer;
+import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
-import rs.raf.pds.v5.z2.gRPC.SellOffer;
+import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
@@ -60,27 +58,15 @@ public class StocksServiceClient {
             }
         };
         
-        StreamObserver<BuyOffer> responseObserverBuyOffers = new StreamObserver<BuyOffer>() {
+        StreamObserver<Offer> responseObserverOffers = new StreamObserver<Offer>() {
             @Override
-            public void onNext(BuyOffer buyOffer) {
-            	ispisBuyOffer(buyOffer);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                System.err.println("Error occurred: " + throwable.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        };
-        
-        StreamObserver<SellOffer> responseObserverSellOffers = new StreamObserver<SellOffer>() {
-            @Override
-            public void onNext(SellOffer sellOffer) {
-            	ispisSellOffer(sellOffer);
+            public void onNext(Offer offer) {
+            	if(offer.getBuy()) {
+                	ispisBuyOffer(offer);
+            	}
+            	else {
+            		ispisSellOffer(offer);
+            	}
             }
 
             @Override
@@ -144,10 +130,11 @@ public class StocksServiceClient {
 		            String symbol = parts[1].trim();
 		            double stockPrice = Double.parseDouble(parts[2].trim());
 		            int numberOfOffers = Integer.parseInt(parts[3].trim());
-	            	asyncStub.addBuyOffer(BuyOffer.newBuilder()
+	            	asyncStub.addOffer(Offer.newBuilder()
 	            			.setSymbol(symbol)
 	            			.setStockPrice(stockPrice)
-	            			.setNumberOfOffers(numberOfOffers).build()
+	            			.setNumberOfOffers(numberOfOffers)
+	            			.setBuy(true).build()
 	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
@@ -158,10 +145,11 @@ public class StocksServiceClient {
 		            String symbol = parts[1].trim();
 		            double stockPrice = Double.parseDouble(parts[2].trim());
 		            int numberOfOffers = Integer.parseInt(parts[3].trim());
-	            	asyncStub.addSellOffer(SellOffer.newBuilder()
+	            	asyncStub.addOffer(Offer.newBuilder()
 	            			.setSymbol(symbol)
 	            			.setStockPrice(stockPrice)
-	            			.setNumberOfOffers(numberOfOffers).build()
+	            			.setNumberOfOffers(numberOfOffers)
+	            			.setBuy(false).build()
 	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
@@ -171,9 +159,10 @@ public class StocksServiceClient {
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
 		            int numberOfOffers = Integer.parseInt(parts[2].trim());
-	            	asyncStub.getBuyOffers(BidRequest.newBuilder()
+	            	asyncStub.getOffers(AskBidRequest.newBuilder()
 	            			.setSymbol(symbol)
-	            			.setNumberOfOffers(numberOfOffers).build(), responseObserverBuyOffers);
+	            			.setNumberOfOffers(numberOfOffers)
+	            			.setAsk(false).build(), responseObserverOffers);
 		        } else {
 		        	System.out.println("Invalid getBuyOffers format, the expected format is /getBuyOffers symbol numberOfOffers");
 		        }
@@ -182,9 +171,10 @@ public class StocksServiceClient {
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
 		            int numberOfOffers = Integer.parseInt(parts[2].trim());
-	            	asyncStub.getSellOffers(AskRequest.newBuilder()
+	            	asyncStub.getOffers(AskBidRequest.newBuilder()
 	            			.setSymbol(symbol)
-	            			.setNumberOfOffers(numberOfOffers).build(), responseObserverSellOffers);
+	            			.setNumberOfOffers(numberOfOffers)
+	            			.setAsk(true).build(), responseObserverOffers);
 		        } else {
 		        	System.out.println("Invalid getSellOffers format, the expected format is /getBuyOffers symbol numberOfOffers");
 		        }
@@ -203,13 +193,13 @@ public class StocksServiceClient {
                 String.format("%.2f", stock.getChangeInPrice()));
     }
     
-    private static void ispisBuyOffer(BuyOffer buyOffer) {
+    private static void ispisBuyOffer(Offer buyOffer) {
         System.out.println(buyOffer.getSymbol() + " " +
         					"Nr. Offers: " + buyOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", buyOffer.getStockPrice()));
     }
     
-    private static void ispisSellOffer(SellOffer sellOffer) {
+    private static void ispisSellOffer(Offer sellOffer) {
         System.out.println(sellOffer.getSymbol() + " " +
         					"Nr. Offers: " + sellOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", sellOffer.getStockPrice()));

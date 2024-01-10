@@ -124,132 +124,68 @@ public final class StocksServiceGrpc {
      return getSubscribeStocksMethod;
   }
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getGetBuyOffersMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BidRequest,
-      rs.raf.pds.v5.z2.gRPC.BuyOffer> METHOD_GET_BUY_OFFERS = getGetBuyOffersMethod();
+  @java.lang.Deprecated // Use {@link #getGetOffersMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskBidRequest,
+      rs.raf.pds.v5.z2.gRPC.Offer> METHOD_GET_OFFERS = getGetOffersMethod();
 
-  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BidRequest,
-      rs.raf.pds.v5.z2.gRPC.BuyOffer> getGetBuyOffersMethod;
+  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskBidRequest,
+      rs.raf.pds.v5.z2.gRPC.Offer> getGetOffersMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BidRequest,
-      rs.raf.pds.v5.z2.gRPC.BuyOffer> getGetBuyOffersMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BidRequest, rs.raf.pds.v5.z2.gRPC.BuyOffer> getGetBuyOffersMethod;
-    if ((getGetBuyOffersMethod = StocksServiceGrpc.getGetBuyOffersMethod) == null) {
+  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskBidRequest,
+      rs.raf.pds.v5.z2.gRPC.Offer> getGetOffersMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskBidRequest, rs.raf.pds.v5.z2.gRPC.Offer> getGetOffersMethod;
+    if ((getGetOffersMethod = StocksServiceGrpc.getGetOffersMethod) == null) {
       synchronized (StocksServiceGrpc.class) {
-        if ((getGetBuyOffersMethod = StocksServiceGrpc.getGetBuyOffersMethod) == null) {
-          StocksServiceGrpc.getGetBuyOffersMethod = getGetBuyOffersMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.BidRequest, rs.raf.pds.v5.z2.gRPC.BuyOffer>newBuilder()
+        if ((getGetOffersMethod = StocksServiceGrpc.getGetOffersMethod) == null) {
+          StocksServiceGrpc.getGetOffersMethod = getGetOffersMethod = 
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.AskBidRequest, rs.raf.pds.v5.z2.gRPC.Offer>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
               .setFullMethodName(generateFullMethodName(
-                  "StocksService", "GetBuyOffers"))
+                  "StocksService", "GetOffers"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.BidRequest.getDefaultInstance()))
+                  rs.raf.pds.v5.z2.gRPC.AskBidRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.BuyOffer.getDefaultInstance()))
-                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("GetBuyOffers"))
+                  rs.raf.pds.v5.z2.gRPC.Offer.getDefaultInstance()))
+                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("GetOffers"))
                   .build();
           }
         }
      }
-     return getGetBuyOffersMethod;
+     return getGetOffersMethod;
   }
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getGetSellOffersMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskRequest,
-      rs.raf.pds.v5.z2.gRPC.SellOffer> METHOD_GET_SELL_OFFERS = getGetSellOffersMethod();
+  @java.lang.Deprecated // Use {@link #getAddOfferMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
+      rs.raf.pds.v5.z2.gRPC.Empty> METHOD_ADD_OFFER = getAddOfferMethod();
 
-  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskRequest,
-      rs.raf.pds.v5.z2.gRPC.SellOffer> getGetSellOffersMethod;
+  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
+      rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskRequest,
-      rs.raf.pds.v5.z2.gRPC.SellOffer> getGetSellOffersMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.AskRequest, rs.raf.pds.v5.z2.gRPC.SellOffer> getGetSellOffersMethod;
-    if ((getGetSellOffersMethod = StocksServiceGrpc.getGetSellOffersMethod) == null) {
+  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
+      rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod;
+    if ((getAddOfferMethod = StocksServiceGrpc.getAddOfferMethod) == null) {
       synchronized (StocksServiceGrpc.class) {
-        if ((getGetSellOffersMethod = StocksServiceGrpc.getGetSellOffersMethod) == null) {
-          StocksServiceGrpc.getGetSellOffersMethod = getGetSellOffersMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.AskRequest, rs.raf.pds.v5.z2.gRPC.SellOffer>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "StocksService", "GetSellOffers"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.AskRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.SellOffer.getDefaultInstance()))
-                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("GetSellOffers"))
-                  .build();
-          }
-        }
-     }
-     return getGetSellOffersMethod;
-  }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getAddBuyOfferMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BuyOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> METHOD_ADD_BUY_OFFER = getAddBuyOfferMethod();
-
-  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BuyOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddBuyOfferMethod;
-
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BuyOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddBuyOfferMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.BuyOffer, rs.raf.pds.v5.z2.gRPC.Empty> getAddBuyOfferMethod;
-    if ((getAddBuyOfferMethod = StocksServiceGrpc.getAddBuyOfferMethod) == null) {
-      synchronized (StocksServiceGrpc.class) {
-        if ((getAddBuyOfferMethod = StocksServiceGrpc.getAddBuyOfferMethod) == null) {
-          StocksServiceGrpc.getAddBuyOfferMethod = getAddBuyOfferMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.BuyOffer, rs.raf.pds.v5.z2.gRPC.Empty>newBuilder()
+        if ((getAddOfferMethod = StocksServiceGrpc.getAddOfferMethod) == null) {
+          StocksServiceGrpc.getAddOfferMethod = getAddOfferMethod = 
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.Empty>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
-                  "StocksService", "AddBuyOffer"))
+                  "StocksService", "AddOffer"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.BuyOffer.getDefaultInstance()))
+                  rs.raf.pds.v5.z2.gRPC.Offer.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   rs.raf.pds.v5.z2.gRPC.Empty.getDefaultInstance()))
-                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("AddBuyOffer"))
+                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("AddOffer"))
                   .build();
           }
         }
      }
-     return getAddBuyOfferMethod;
-  }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getAddSellOfferMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SellOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> METHOD_ADD_SELL_OFFER = getAddSellOfferMethod();
-
-  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SellOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddSellOfferMethod;
-
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SellOffer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddSellOfferMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SellOffer, rs.raf.pds.v5.z2.gRPC.Empty> getAddSellOfferMethod;
-    if ((getAddSellOfferMethod = StocksServiceGrpc.getAddSellOfferMethod) == null) {
-      synchronized (StocksServiceGrpc.class) {
-        if ((getAddSellOfferMethod = StocksServiceGrpc.getAddSellOfferMethod) == null) {
-          StocksServiceGrpc.getAddSellOfferMethod = getAddSellOfferMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.SellOffer, rs.raf.pds.v5.z2.gRPC.Empty>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "StocksService", "AddSellOffer"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.SellOffer.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.Empty.getDefaultInstance()))
-                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("AddSellOffer"))
-                  .build();
-          }
-        }
-     }
-     return getAddSellOfferMethod;
+     return getAddOfferMethod;
   }
 
   /**
@@ -302,30 +238,16 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public void getBuyOffers(rs.raf.pds.v5.z2.gRPC.BidRequest request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.BuyOffer> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetBuyOffersMethod(), responseObserver);
+    public void getOffers(rs.raf.pds.v5.z2.gRPC.AskBidRequest request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Offer> responseObserver) {
+      asyncUnimplementedUnaryCall(getGetOffersMethod(), responseObserver);
     }
 
     /**
      */
-    public void getSellOffers(rs.raf.pds.v5.z2.gRPC.AskRequest request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.SellOffer> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetSellOffersMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void addBuyOffer(rs.raf.pds.v5.z2.gRPC.BuyOffer request,
+    public void addOffer(rs.raf.pds.v5.z2.gRPC.Offer request,
         io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
-      asyncUnimplementedUnaryCall(getAddBuyOfferMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void addSellOffer(rs.raf.pds.v5.z2.gRPC.SellOffer request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
-      asyncUnimplementedUnaryCall(getAddSellOfferMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getAddOfferMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -352,33 +274,19 @@ public final class StocksServiceGrpc {
                 rs.raf.pds.v5.z2.gRPC.Stock>(
                   this, METHODID_SUBSCRIBE_STOCKS)))
           .addMethod(
-            getGetBuyOffersMethod(),
+            getGetOffersMethod(),
             asyncServerStreamingCall(
               new MethodHandlers<
-                rs.raf.pds.v5.z2.gRPC.BidRequest,
-                rs.raf.pds.v5.z2.gRPC.BuyOffer>(
-                  this, METHODID_GET_BUY_OFFERS)))
+                rs.raf.pds.v5.z2.gRPC.AskBidRequest,
+                rs.raf.pds.v5.z2.gRPC.Offer>(
+                  this, METHODID_GET_OFFERS)))
           .addMethod(
-            getGetSellOffersMethod(),
-            asyncServerStreamingCall(
-              new MethodHandlers<
-                rs.raf.pds.v5.z2.gRPC.AskRequest,
-                rs.raf.pds.v5.z2.gRPC.SellOffer>(
-                  this, METHODID_GET_SELL_OFFERS)))
-          .addMethod(
-            getAddBuyOfferMethod(),
+            getAddOfferMethod(),
             asyncUnaryCall(
               new MethodHandlers<
-                rs.raf.pds.v5.z2.gRPC.BuyOffer,
+                rs.raf.pds.v5.z2.gRPC.Offer,
                 rs.raf.pds.v5.z2.gRPC.Empty>(
-                  this, METHODID_ADD_BUY_OFFER)))
-          .addMethod(
-            getAddSellOfferMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                rs.raf.pds.v5.z2.gRPC.SellOffer,
-                rs.raf.pds.v5.z2.gRPC.Empty>(
-                  this, METHODID_ADD_SELL_OFFER)))
+                  this, METHODID_ADD_OFFER)))
           .build();
     }
   }
@@ -427,34 +335,18 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public void getBuyOffers(rs.raf.pds.v5.z2.gRPC.BidRequest request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.BuyOffer> responseObserver) {
+    public void getOffers(rs.raf.pds.v5.z2.gRPC.AskBidRequest request,
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Offer> responseObserver) {
       asyncServerStreamingCall(
-          getChannel().newCall(getGetBuyOffersMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getGetOffersMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
      */
-    public void getSellOffers(rs.raf.pds.v5.z2.gRPC.AskRequest request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.SellOffer> responseObserver) {
-      asyncServerStreamingCall(
-          getChannel().newCall(getGetSellOffersMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void addBuyOffer(rs.raf.pds.v5.z2.gRPC.BuyOffer request,
+    public void addOffer(rs.raf.pds.v5.z2.gRPC.Offer request,
         io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(getAddBuyOfferMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void addSellOffer(rs.raf.pds.v5.z2.gRPC.SellOffer request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
-      asyncUnaryCall(
-          getChannel().newCall(getAddSellOfferMethod(), getCallOptions()), request, responseObserver);
+          getChannel().newCall(getAddOfferMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -501,32 +393,17 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.BuyOffer> getBuyOffers(
-        rs.raf.pds.v5.z2.gRPC.BidRequest request) {
+    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.Offer> getOffers(
+        rs.raf.pds.v5.z2.gRPC.AskBidRequest request) {
       return blockingServerStreamingCall(
-          getChannel(), getGetBuyOffersMethod(), getCallOptions(), request);
+          getChannel(), getGetOffersMethod(), getCallOptions(), request);
     }
 
     /**
      */
-    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.SellOffer> getSellOffers(
-        rs.raf.pds.v5.z2.gRPC.AskRequest request) {
-      return blockingServerStreamingCall(
-          getChannel(), getGetSellOffersMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public rs.raf.pds.v5.z2.gRPC.Empty addBuyOffer(rs.raf.pds.v5.z2.gRPC.BuyOffer request) {
+    public rs.raf.pds.v5.z2.gRPC.Empty addOffer(rs.raf.pds.v5.z2.gRPC.Offer request) {
       return blockingUnaryCall(
-          getChannel(), getAddBuyOfferMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public rs.raf.pds.v5.z2.gRPC.Empty addSellOffer(rs.raf.pds.v5.z2.gRPC.SellOffer request) {
-      return blockingUnaryCall(
-          getChannel(), getAddSellOfferMethod(), getCallOptions(), request);
+          getChannel(), getAddOfferMethod(), getCallOptions(), request);
     }
   }
 
@@ -558,28 +435,18 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Empty> addBuyOffer(
-        rs.raf.pds.v5.z2.gRPC.BuyOffer request) {
+    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Empty> addOffer(
+        rs.raf.pds.v5.z2.gRPC.Offer request) {
       return futureUnaryCall(
-          getChannel().newCall(getAddBuyOfferMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Empty> addSellOffer(
-        rs.raf.pds.v5.z2.gRPC.SellOffer request) {
-      return futureUnaryCall(
-          getChannel().newCall(getAddSellOfferMethod(), getCallOptions()), request);
+          getChannel().newCall(getAddOfferMethod(), getCallOptions()), request);
     }
   }
 
   private static final int METHODID_GET_STOCK = 0;
   private static final int METHODID_GET_ALL_STOCKS = 1;
   private static final int METHODID_SUBSCRIBE_STOCKS = 2;
-  private static final int METHODID_GET_BUY_OFFERS = 3;
-  private static final int METHODID_GET_SELL_OFFERS = 4;
-  private static final int METHODID_ADD_BUY_OFFER = 5;
-  private static final int METHODID_ADD_SELL_OFFER = 6;
+  private static final int METHODID_GET_OFFERS = 3;
+  private static final int METHODID_ADD_OFFER = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -610,20 +477,12 @@ public final class StocksServiceGrpc {
           serviceImpl.subscribeStocks((rs.raf.pds.v5.z2.gRPC.SubscribeUpit) request,
               (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Stock>) responseObserver);
           break;
-        case METHODID_GET_BUY_OFFERS:
-          serviceImpl.getBuyOffers((rs.raf.pds.v5.z2.gRPC.BidRequest) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.BuyOffer>) responseObserver);
+        case METHODID_GET_OFFERS:
+          serviceImpl.getOffers((rs.raf.pds.v5.z2.gRPC.AskBidRequest) request,
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Offer>) responseObserver);
           break;
-        case METHODID_GET_SELL_OFFERS:
-          serviceImpl.getSellOffers((rs.raf.pds.v5.z2.gRPC.AskRequest) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.SellOffer>) responseObserver);
-          break;
-        case METHODID_ADD_BUY_OFFER:
-          serviceImpl.addBuyOffer((rs.raf.pds.v5.z2.gRPC.BuyOffer) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty>) responseObserver);
-          break;
-        case METHODID_ADD_SELL_OFFER:
-          serviceImpl.addSellOffer((rs.raf.pds.v5.z2.gRPC.SellOffer) request,
+        case METHODID_ADD_OFFER:
+          serviceImpl.addOffer((rs.raf.pds.v5.z2.gRPC.Offer) request,
               (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty>) responseObserver);
           break;
         default:
@@ -690,10 +549,8 @@ public final class StocksServiceGrpc {
               .addMethod(getGetStockMethod())
               .addMethod(getGetAllStocksMethod())
               .addMethod(getSubscribeStocksMethod())
-              .addMethod(getGetBuyOffersMethod())
-              .addMethod(getGetSellOffersMethod())
-              .addMethod(getAddBuyOfferMethod())
-              .addMethod(getAddSellOfferMethod())
+              .addMethod(getGetOffersMethod())
+              .addMethod(getAddOfferMethod())
               .build();
         }
       }

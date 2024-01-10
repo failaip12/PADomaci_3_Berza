@@ -4,18 +4,18 @@
 package rs.raf.pds.v5.z2.gRPC;
 
 /**
- * Protobuf type {@code AskRequest}
+ * Protobuf type {@code AskBidRequest}
  */
-public final class AskRequest extends
+public final class AskBidRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:AskRequest)
-    AskRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:AskBidRequest)
+    AskBidRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use AskRequest.newBuilder() to construct.
-  private AskRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use AskBidRequest.newBuilder() to construct.
+  private AskBidRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private AskRequest() {
+  private AskBidRequest() {
     symbol_ = "";
   }
 
@@ -23,20 +23,20 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new AskRequest();
+    return new AskBidRequest();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskBidRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_fieldAccessorTable
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskBidRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            rs.raf.pds.v5.z2.gRPC.AskRequest.class, rs.raf.pds.v5.z2.gRPC.AskRequest.Builder.class);
+            rs.raf.pds.v5.z2.gRPC.AskBidRequest.class, rs.raf.pds.v5.z2.gRPC.AskBidRequest.Builder.class);
   }
 
   public static final int SYMBOL_FIELD_NUMBER = 1;
@@ -89,6 +89,17 @@ private static final long serialVersionUID = 0L;
     return numberOfOffers_;
   }
 
+  public static final int ASK_FIELD_NUMBER = 3;
+  private boolean ask_ = false;
+  /**
+   * <code>bool ask = 3;</code>
+   * @return The ask.
+   */
+  @java.lang.Override
+  public boolean getAsk() {
+    return ask_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -109,6 +120,9 @@ private static final long serialVersionUID = 0L;
     if (numberOfOffers_ != 0) {
       output.writeInt32(2, numberOfOffers_);
     }
+    if (ask_ != false) {
+      output.writeBool(3, ask_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -125,6 +139,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(2, numberOfOffers_);
     }
+    if (ask_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(3, ask_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -135,15 +153,17 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.AskRequest)) {
+    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.AskBidRequest)) {
       return super.equals(obj);
     }
-    rs.raf.pds.v5.z2.gRPC.AskRequest other = (rs.raf.pds.v5.z2.gRPC.AskRequest) obj;
+    rs.raf.pds.v5.z2.gRPC.AskBidRequest other = (rs.raf.pds.v5.z2.gRPC.AskBidRequest) obj;
 
     if (!getSymbol()
         .equals(other.getSymbol())) return false;
     if (getNumberOfOffers()
         != other.getNumberOfOffers()) return false;
+    if (getAsk()
+        != other.getAsk()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -159,74 +179,77 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getSymbol().hashCode();
     hash = (37 * hash) + NUMBEROFOFFERS_FIELD_NUMBER;
     hash = (53 * hash) + getNumberOfOffers();
+    hash = (37 * hash) + ASK_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getAsk());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(byte[] data)
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseDelimitedFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseDelimitedFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -239,7 +262,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.AskRequest prototype) {
+  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.AskBidRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -255,26 +278,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code AskRequest}
+   * Protobuf type {@code AskBidRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:AskRequest)
-      rs.raf.pds.v5.z2.gRPC.AskRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:AskBidRequest)
+      rs.raf.pds.v5.z2.gRPC.AskBidRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskBidRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_fieldAccessorTable
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskBidRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              rs.raf.pds.v5.z2.gRPC.AskRequest.class, rs.raf.pds.v5.z2.gRPC.AskRequest.Builder.class);
+              rs.raf.pds.v5.z2.gRPC.AskBidRequest.class, rs.raf.pds.v5.z2.gRPC.AskBidRequest.Builder.class);
     }
 
-    // Construct using rs.raf.pds.v5.z2.gRPC.AskRequest.newBuilder()
+    // Construct using rs.raf.pds.v5.z2.gRPC.AskBidRequest.newBuilder()
     private Builder() {
 
     }
@@ -290,23 +313,24 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       symbol_ = "";
       numberOfOffers_ = 0;
+      ask_ = false;
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskRequest_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_AskBidRequest_descriptor;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstanceForType() {
-      return rs.raf.pds.v5.z2.gRPC.AskRequest.getDefaultInstance();
+    public rs.raf.pds.v5.z2.gRPC.AskBidRequest getDefaultInstanceForType() {
+      return rs.raf.pds.v5.z2.gRPC.AskBidRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.AskRequest build() {
-      rs.raf.pds.v5.z2.gRPC.AskRequest result = buildPartial();
+    public rs.raf.pds.v5.z2.gRPC.AskBidRequest build() {
+      rs.raf.pds.v5.z2.gRPC.AskBidRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -314,14 +338,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.AskRequest buildPartial() {
-      rs.raf.pds.v5.z2.gRPC.AskRequest result = new rs.raf.pds.v5.z2.gRPC.AskRequest(this);
+    public rs.raf.pds.v5.z2.gRPC.AskBidRequest buildPartial() {
+      rs.raf.pds.v5.z2.gRPC.AskBidRequest result = new rs.raf.pds.v5.z2.gRPC.AskBidRequest(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.AskRequest result) {
+    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.AskBidRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.symbol_ = symbol_;
@@ -329,20 +353,23 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000002) != 0)) {
         result.numberOfOffers_ = numberOfOffers_;
       }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.ask_ = ask_;
+      }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof rs.raf.pds.v5.z2.gRPC.AskRequest) {
-        return mergeFrom((rs.raf.pds.v5.z2.gRPC.AskRequest)other);
+      if (other instanceof rs.raf.pds.v5.z2.gRPC.AskBidRequest) {
+        return mergeFrom((rs.raf.pds.v5.z2.gRPC.AskBidRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.AskRequest other) {
-      if (other == rs.raf.pds.v5.z2.gRPC.AskRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.AskBidRequest other) {
+      if (other == rs.raf.pds.v5.z2.gRPC.AskBidRequest.getDefaultInstance()) return this;
       if (!other.getSymbol().isEmpty()) {
         symbol_ = other.symbol_;
         bitField0_ |= 0x00000001;
@@ -350,6 +377,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getNumberOfOffers() != 0) {
         setNumberOfOffers(other.getNumberOfOffers());
+      }
+      if (other.getAsk() != false) {
+        setAsk(other.getAsk());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -387,6 +417,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000002;
               break;
             } // case 16
+            case 24: {
+              ask_ = input.readBool();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 24
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -507,6 +542,38 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private boolean ask_ ;
+    /**
+     * <code>bool ask = 3;</code>
+     * @return The ask.
+     */
+    @java.lang.Override
+    public boolean getAsk() {
+      return ask_;
+    }
+    /**
+     * <code>bool ask = 3;</code>
+     * @param value The ask to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAsk(boolean value) {
+
+      ask_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool ask = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearAsk() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      ask_ = false;
+      onChanged();
+      return this;
+    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -520,23 +587,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:AskRequest)
+    // @@protoc_insertion_point(builder_scope:AskBidRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:AskRequest)
-  private static final rs.raf.pds.v5.z2.gRPC.AskRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:AskBidRequest)
+  private static final rs.raf.pds.v5.z2.gRPC.AskBidRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.AskRequest();
+    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.AskBidRequest();
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstance() {
+  public static rs.raf.pds.v5.z2.gRPC.AskBidRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<AskRequest>
-      PARSER = new com.google.protobuf.AbstractParser<AskRequest>() {
+  private static final com.google.protobuf.Parser<AskBidRequest>
+      PARSER = new com.google.protobuf.AbstractParser<AskBidRequest>() {
     @java.lang.Override
-    public AskRequest parsePartialFrom(
+    public AskBidRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -555,17 +622,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<AskRequest> parser() {
+  public static com.google.protobuf.Parser<AskBidRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<AskRequest> getParserForType() {
+  public com.google.protobuf.Parser<AskBidRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public rs.raf.pds.v5.z2.gRPC.AskRequest getDefaultInstanceForType() {
+  public rs.raf.pds.v5.z2.gRPC.AskBidRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
