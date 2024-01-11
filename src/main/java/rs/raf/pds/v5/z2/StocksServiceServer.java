@@ -88,14 +88,13 @@ public class StocksServiceServer {
             }
         }
         
-        
         @Override
         public void getOffers(AskBidRequest request, StreamObserver<Offer> responseObserver) {
             CopyOnWriteArrayList<Offer> offerList = stockOffersMap.get(symbolStockMap.get(request.getSymbol()));
             if (offerList != null) {
                 List<Offer> offers = offerList.stream()
                         .filter(offer -> (request.getAsk() && !offer.getBuy()) || (!request.getAsk() && offer.getBuy()))
-                        .sorted(Comparator.comparingDouble(Offer::getStockPrice))
+                        .sorted(request.getAsk() ? Comparator.comparingDouble(Offer::getStockPrice) : Comparator.comparingDouble(Offer::getStockPrice).reversed())
                         .limit(request.getNumberOfOffers())
                         .collect(Collectors.toList());
 
@@ -104,62 +103,68 @@ public class StocksServiceServer {
                 }
             }
         }
-
-
         
         @Override
         public void addOffer(Offer request, StreamObserver<Empty> responseObserver) {
         	Stock stock = symbolStockMap.get(request.getSymbol());
-            CopyOnWriteArrayList<Offer> offers = stockOffersMap.get(stock);
-
-            if (offers == null) {
-            	offers = new CopyOnWriteArrayList<>();
-                stockOffersMap.put(stock, offers);
+        	CopyOnWriteArrayList<Offer> offersList = stockOffersMap.get(stock);
+            if (offersList == null) {
+            	offersList = new CopyOnWriteArrayList<>();
+                stockOffersMap.put(stock, offersList);
+                return;
             }
-            Boolean found = false;
+            List<Offer> offers = offersList.stream()
+                    .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()))
+                    .collect(Collectors.toList());
+    		int numberOfOffersRequest = request.getNumberOfOffers();
             for (Offer offer:offers) {
-            	if(!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()) {
-            		int numberOfOffersOffer = 0;
-            		if(offer.getNumberOfOffers() > request.getNumberOfOffers()) {
-            			numberOfOffersOffer = offer.getNumberOfOffers() - request.getNumberOfOffers();
-                		Offer updatedOffer = Offer.newBuilder()
-   							 .setBuy(offer.getBuy())
-   							 .setClientId(offer.getClientId())
-   							 .setStockPrice(offer.getStockPrice())
-   							 .setSymbol(offer.getSymbol())
-   							 .setNumberOfOffers(numberOfOffersOffer).build();
-                		//update offer in list with updated offer
-                		notifyTransaction(request, updatedOffer); //TODO fix this 
-                		offers.set(offers.indexOf(offer), updatedOffer);
-            		}
-            		else if(offer.getNumberOfOffers() < request.getNumberOfOffers()) {
-                        numberOfOffersOffer = request.getNumberOfOffers() - offer.getNumberOfOffers();
-                        Offer updatedRequest = Offer.newBuilder()
-                                .setBuy(request.getBuy())
-                                .setClientId(request.getClientId())
-                                .setStockPrice(request.getStockPrice())
-                                .setSymbol(request.getSymbol())
-                                .setNumberOfOffers(numberOfOffersOffer).build();
-                		//update request with updated offer, put it in list and remove offer from list
-                		notifyTransaction(updatedRequest, offer); //TODO fix this 
-                        offers.add(updatedRequest);
-                        offers.remove(offer);
-            		}
-            		else {
-                		//remove offer from list
-            			notifyTransaction(offer, request); //TODO fix this 
-                		offers.remove(offer);
-            		}
-            		//notify both parties
-                    found = true;
+            	if(numberOfOffersRequest <= 0) {
+            		break;
             	}
+        		if(offer.getNumberOfOffers() > numberOfOffersRequest) {
+        			int numberOfOffersOffer = offer.getNumberOfOffers() - request.getNumberOfOffers();
+            		Offer updatedOffer = Offer.newBuilder()
+						 .setBuy(offer.getBuy())
+						 .setClientId(offer.getClientId())
+						 .setStockPrice(offer.getStockPrice())
+						 .setSymbol(offer.getSymbol())
+						 .setNumberOfOffers(numberOfOffersOffer).build();
+            		//update offer in list with updated offer
+            		notifyTransaction(request, updatedOffer); //TODO fix this 
+            		offersList.set(offersList.indexOf(offer), updatedOffer);
+        		}
+        		else if(offer.getNumberOfOffers() < numberOfOffersRequest) {
+                    numberOfOffersRequest -= offer.getNumberOfOffers();
+                    Offer updatedRequest = Offer.newBuilder()
+                            .setBuy(request.getBuy())
+                            .setClientId(request.getClientId())
+                            .setStockPrice(request.getStockPrice())
+                            .setSymbol(request.getSymbol())
+                            .setNumberOfOffers(numberOfOffersRequest).build();
+            		//update request with updated offer, put it in list and remove offer from list
+            		notifyTransaction(updatedRequest, offer); //TODO fix this
+            		offersList.remove(offer);
+        		}
+        		else {
+            		//remove offer from list
+        			numberOfOffersRequest = 0;
+        			notifyTransaction(offer, request); //TODO fix this 
+        			offersList.remove(offer);
+        		}
+        		//notify both parties
             }
-            if(!found) {
-	            offers.add(request);
+            if(numberOfOffersRequest > 0) {
+                Offer updatedRequest = Offer.newBuilder()
+                        .setBuy(request.getBuy())
+                        .setClientId(request.getClientId())
+                        .setStockPrice(request.getStockPrice())
+                        .setSymbol(request.getSymbol())
+                        .setNumberOfOffers(numberOfOffersRequest).build();
+	            offersList.add(updatedRequest);
             }
+            stockOffersMap.put(stock, offersList);
     		responseObserver.onNext(Empty.newBuilder().build());
     		responseObserver.onCompleted();
-            stockOffersMap.put(stock, offers);
         }
         
         private void notifyTransaction(Offer buyOffer, Offer sellOffer) {
