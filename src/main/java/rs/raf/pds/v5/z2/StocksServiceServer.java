@@ -108,7 +108,7 @@ public class StocksServiceServer {
 
         
         @Override
-        public void addOffer(Offer request, StreamObserver<TransactionNotification> responseObserver) {
+        public void addOffer(Offer request, StreamObserver<Empty> responseObserver) {
         	Stock stock = symbolStockMap.get(request.getSymbol());
             CopyOnWriteArrayList<Offer> offers = stockOffersMap.get(stock);
 
@@ -129,15 +129,6 @@ public class StocksServiceServer {
    							 .setSymbol(offer.getSymbol())
    							 .setNumberOfOffers(numberOfOffersOffer).build();
                 		//update offer in list with updated offer
-                		//responseObserver.onNext(Empty.newBuilder().build());
-                		//responseObserver.onCompleted();
-//                    	TransactionNotification transactionNotificationSeller = TransactionNotification.newBuilder()
-//                                .setClientId(request.getClientId())
-//                                .setSymbol(request.getSymbol())
-//                                .setPrice(request.getStockPrice())
-//                                .setNumberOfShares(request.getNumberOfOffers())
-//                                .build();
-//                    	responseObserver.onNext(transactionNotificationSeller);
                 		notifyTransaction(request, updatedOffer); //TODO fix this 
                 		offers.set(offers.indexOf(offer), updatedOffer);
             		}
@@ -150,31 +141,13 @@ public class StocksServiceServer {
                                 .setSymbol(request.getSymbol())
                                 .setNumberOfOffers(numberOfOffersOffer).build();
                 		//update request with updated offer, put it in list and remove offer from list
-                        //responseObserver.onNext(Empty.newBuilder().build());
-                        //responseObserver.onCompleted();
                 		notifyTransaction(updatedRequest, offer); //TODO fix this 
-//                    	TransactionNotification transactionNotificationSeller = TransactionNotification.newBuilder()
-//                                .setClientId(request.getClientId())
-//                                .setSymbol(request.getSymbol())
-//                                .setPrice(request.getStockPrice())
-//                                .setNumberOfShares(request.getNumberOfOffers())
-//                                .build();
-//                    	responseObserver.onNext(transactionNotificationSeller);
                         offers.add(updatedRequest);
                         offers.remove(offer);
             		}
             		else {
                 		//remove offer from list
-            			//responseObserver.onNext(Empty.newBuilder().build());
-            			//responseObserver.onCompleted();
             			notifyTransaction(offer, request); //TODO fix this 
-//                    	TransactionNotification transactionNotificationSeller = TransactionNotification.newBuilder()
-//                                .setClientId(request.getClientId())
-//                                .setSymbol(request.getSymbol())
-//                                .setPrice(request.getStockPrice())
-//                                .setNumberOfShares(request.getNumberOfOffers())
-//                                .build();
-//                    	responseObserver.onNext(transactionNotificationSeller);
                 		offers.remove(offer);
             		}
             		//notify both parties
@@ -184,6 +157,8 @@ public class StocksServiceServer {
             if(!found) {
 	            offers.add(request);
             }
+    		responseObserver.onNext(Empty.newBuilder().build());
+    		responseObserver.onCompleted();
             stockOffersMap.put(stock, offers);
         }
         

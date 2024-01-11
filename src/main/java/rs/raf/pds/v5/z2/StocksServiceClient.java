@@ -160,7 +160,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(true)
 	            			.setClientId(clientId).build()
-	            			, transactionNotificationObserver);
+	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
 		        }
@@ -176,7 +176,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(false)
 	            			.setClientId(clientId).build()
-	            			, transactionNotificationObserver);
+	            			, responseObserverEmpty);
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
 		        }
