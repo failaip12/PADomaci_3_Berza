@@ -136,7 +136,6 @@ public class StocksServiceClient {
             }
         }
 
-        // Create a new request for subscription
         SubscribeUpit subscriptionRequest = SubscribeUpit.newBuilder().addAllSymbols(symbols).build();
 
         // Subscribe to the stocks
@@ -161,7 +160,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(true)
 	            			.setClientId(clientId).build()
-	            			, responseObserverEmpty);
+	            			, transactionNotificationObserver);
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
 		        }
@@ -177,7 +176,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(false)
 	            			.setClientId(clientId).build()
-	            			, responseObserverEmpty);
+	            			, transactionNotificationObserver);
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
 		        }

@@ -75,16 +75,16 @@ public final class StocksServiceOuterClass {
       "\005 \001(\t\"b\n\027TransactionNotification\022\020\n\010clie" +
       "ntId\030\001 \001(\t\022\016\n\006symbol\030\002 \001(\t\022\r\n\005price\030\003 \001(" +
       "\001\022\026\n\016numberOfShares\030\004 \001(\005\"\034\n\010ClientId\022\020\n" +
-      "\010clientId\030\001 \001(\t\"\007\n\005Empty2\256\002\n\rStocksServi" +
+      "\010clientId\030\001 \001(\t\"\007\n\005Empty2\304\002\n\rStocksServi" +
       "ce\022\"\n\013GetUniqueId\022\006.Empty\032\t.ClientId\"\000\022#" +
       "\n\010GetStock\022\r.StockRequest\032\006.Stock\"\000\022\"\n\014G" +
       "etAllStocks\022\006.Empty\032\006.Stock\"\0000\001\022-\n\017Subsc" +
       "ribeStocks\022\016.SubscribeUpit\032\006.Stock\"\0000\001\022\'" +
       "\n\tGetOffers\022\016.AskBidRequest\032\006.Offer\"\0000\001\022" +
-      "\034\n\010AddOffer\022\006.Offer\032\006.Empty\"\000\022:\n\021SubToTr" +
-      "ansactions\022\t.ClientId\032\030.TransactionNotif" +
-      "ication\"\000B\031\n\025rs.raf.pds.v5.z2.gRPCP\001b\006pr" +
-      "oto3"
+      "0\n\010AddOffer\022\006.Offer\032\030.TransactionNotific" +
+      "ation\"\0000\001\022<\n\021SubToTransactions\022\t.ClientI" +
+      "d\032\030.TransactionNotification\"\0000\001B\031\n\025rs.ra" +
+      "f.pds.v5.z2.gRPCP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

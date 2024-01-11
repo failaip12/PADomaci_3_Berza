@@ -14,9 +14,9 @@ service StocksService {
 
 	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
-	rpc AddOffer(Offer) returns (Empty) {}
+	rpc AddOffer(Offer) returns (stream TransactionNotification) {}
 
-	rpc SubToTransactions(ClientId) returns (TransactionNotification) {}
+	rpc SubToTransactions(ClientId) returns (stream TransactionNotification) {}
 }
 
 message Stock {
