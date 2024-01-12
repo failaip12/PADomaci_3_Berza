@@ -18,7 +18,6 @@ import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -103,7 +102,11 @@ public class StocksServiceServer {
         
         @Override
         public void getTransactionHistory(TransactionHistoryRequest request, StreamObserver<TransactionHistory> responseObserver) {
-        	Instant date = Instant.ofEpochMilli(LocalDateTime.of(request.getYear(), request.getMonth(), request.getDay() ,0, 0).atZone(ZoneId.systemDefault()).toInstant().truncatedTo(ChronoUnit.DAYS).toEpochMilli());
+        	Instant date = LocalDateTime.of(request.getYear(), request.getMonth(), request.getDay(), 23, 59, 59)
+        	        .atZone(ZoneId.systemDefault())
+        	        .toInstant()
+        	        .truncatedTo(ChronoUnit.DAYS);
+        	System.out.println(date);
             CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
             if (history != null) {
                 for (TransactionHistory event : history) {
@@ -384,7 +387,7 @@ public class StocksServiceServer {
         private void sendUpdates() {
         	//System.out.println(clientStockBalanceMap);
         	//System.out.println(stockOffersMap);
-        	System.out.println(dateTransactionHistoryMap);
+        	//System.out.println(dateTransactionHistoryMap);
             for (StreamObserver<StockArray> observer : subscriptions.keySet()) {
             	List<String> symbols = subscriptions.get(observer);
             	Collections.sort(symbols);

@@ -22,6 +22,8 @@ import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -77,7 +79,9 @@ public class StocksServiceClient {
         StreamObserver<StockArray> responseObserverSubscribe = new StreamObserver<StockArray>() {
             @Override
             public void onNext(StockArray array) {
-            	ispisStockUpdate(array);
+            	if(array.getStocksCount() > 0) {
+            		ispisStockUpdate(array);
+            	}
             }
 
             @Override
@@ -277,16 +281,21 @@ public class StocksServiceClient {
                         int year = Integer.parseInt(parts[2].trim());
                         int month = Integer.parseInt(parts[3].trim());
                         int day = Integer.parseInt(parts[4].trim());
-
-                        asyncStub.getTransactionHistory(
-                        		TransactionHistoryRequest.newBuilder()
-                        				.setSymbol(symbol)
-                                        .setYear(year)
-                                        .setMonth(month)
-                                        .setDay(day)
-                                        .build(),
-                                responseObserverTransactionHistory
-                        );
+                        try {
+                        	LocalDateTime date = LocalDateTime.of(year, month, day, 23, 59, 59);
+                            asyncStub.getTransactionHistory(
+                            		TransactionHistoryRequest.newBuilder()
+                            				.setSymbol(symbol)
+                                            .setYear(year)
+                                            .setMonth(month)
+                                            .setDay(day)
+                                            .build(),
+                                    responseObserverTransactionHistory
+                            );
+                        }
+                        catch (DateTimeException e){
+                        	System.out.println("Invalid date: Please provide a valid date.");
+                        }
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid input: Please provide valid integers for year, month, and day.");
                     }
