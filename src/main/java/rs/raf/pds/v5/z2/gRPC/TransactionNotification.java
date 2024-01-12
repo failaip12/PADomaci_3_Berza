@@ -140,6 +140,17 @@ private static final long serialVersionUID = 0L;
     return numberOfShares_;
   }
 
+  public static final int BUY_FIELD_NUMBER = 5;
+  private boolean buy_ = false;
+  /**
+   * <code>bool buy = 5;</code>
+   * @return The buy.
+   */
+  @java.lang.Override
+  public boolean getBuy() {
+    return buy_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -166,6 +177,9 @@ private static final long serialVersionUID = 0L;
     if (numberOfShares_ != 0) {
       output.writeInt32(4, numberOfShares_);
     }
+    if (buy_ != false) {
+      output.writeBool(5, buy_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -188,6 +202,10 @@ private static final long serialVersionUID = 0L;
     if (numberOfShares_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(4, numberOfShares_);
+    }
+    if (buy_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(5, buy_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -213,6 +231,8 @@ private static final long serialVersionUID = 0L;
             other.getPrice())) return false;
     if (getNumberOfShares()
         != other.getNumberOfShares()) return false;
+    if (getBuy()
+        != other.getBuy()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -233,6 +253,9 @@ private static final long serialVersionUID = 0L;
         java.lang.Double.doubleToLongBits(getPrice()));
     hash = (37 * hash) + NUMBEROFSHARES_FIELD_NUMBER;
     hash = (53 * hash) + getNumberOfShares();
+    hash = (37 * hash) + BUY_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getBuy());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -366,6 +389,7 @@ private static final long serialVersionUID = 0L;
       symbol_ = "";
       price_ = 0D;
       numberOfShares_ = 0;
+      buy_ = false;
       return this;
     }
 
@@ -411,6 +435,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000008) != 0)) {
         result.numberOfShares_ = numberOfShares_;
       }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        result.buy_ = buy_;
+      }
     }
 
     @java.lang.Override
@@ -440,6 +467,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getNumberOfShares() != 0) {
         setNumberOfShares(other.getNumberOfShares());
+      }
+      if (other.getBuy() != false) {
+        setBuy(other.getBuy());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -487,6 +517,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000008;
               break;
             } // case 32
+            case 40: {
+              buy_ = input.readBool();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 40
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -708,6 +743,38 @@ private static final long serialVersionUID = 0L;
     public Builder clearNumberOfShares() {
       bitField0_ = (bitField0_ & ~0x00000008);
       numberOfShares_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean buy_ ;
+    /**
+     * <code>bool buy = 5;</code>
+     * @return The buy.
+     */
+    @java.lang.Override
+    public boolean getBuy() {
+      return buy_;
+    }
+    /**
+     * <code>bool buy = 5;</code>
+     * @param value The buy to set.
+     * @return This builder for chaining.
+     */
+    public Builder setBuy(boolean value) {
+
+      buy_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool buy = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearBuy() {
+      bitField0_ = (bitField0_ & ~0x00000010);
+      buy_ = false;
       onChanged();
       return this;
     }

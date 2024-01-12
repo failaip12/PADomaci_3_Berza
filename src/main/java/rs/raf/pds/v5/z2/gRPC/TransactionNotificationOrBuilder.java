@@ -42,4 +42,10 @@ public interface TransactionNotificationOrBuilder extends
    * @return The numberOfShares.
    */
   int getNumberOfShares();
+
+  /**
+   * <code>bool buy = 5;</code>
+   * @return The buy.
+   */
+  boolean getBuy();
 }

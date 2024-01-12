@@ -77,20 +77,20 @@ public final class StocksServiceOuterClass {
       "Offers\030\002 \001(\005\022\013\n\003ask\030\003 \001(\010\"b\n\005Offer\022\016\n\006sy" +
       "mbol\030\001 \001(\t\022\022\n\nstockPrice\030\002 \001(\001\022\026\n\016number" +
       "OfOffers\030\003 \001(\005\022\013\n\003buy\030\004 \001(\010\022\020\n\010clientId\030" +
-      "\005 \001(\t\"b\n\027TransactionNotification\022\020\n\010clie" +
+      "\005 \001(\t\"o\n\027TransactionNotification\022\020\n\010clie" +
       "ntId\030\001 \001(\t\022\016\n\006symbol\030\002 \001(\t\022\r\n\005price\030\003 \001(" +
-      "\001\022\026\n\016numberOfShares\030\004 \001(\005\"\034\n\010ClientId\022\020\n" +
-      "\010clientId\030\001 \001(\t\"\007\n\005Empty\"!\n\016AddOfferResu" +
-      "lt\022\017\n\007message\030\001 \001(\t2\271\002\n\rStocksService\022\"\n" +
-      "\013GetUniqueId\022\006.Empty\032\t.ClientId\"\000\022#\n\010Get" +
-      "Stock\022\r.StockRequest\032\006.Stock\"\000\022\"\n\014GetAll" +
-      "Stocks\022\006.Empty\032\006.Stock\"\0000\001\022-\n\017SubscribeS" +
-      "tocks\022\016.SubscribeUpit\032\006.Stock\"\0000\001\022\'\n\tGet" +
-      "Offers\022\016.AskBidRequest\032\006.Offer\"\0000\001\022%\n\010Ad" +
-      "dOffer\022\006.Offer\032\017.AddOfferResult\"\000\022<\n\021Sub" +
-      "ToTransactions\022\t.ClientId\032\030.TransactionN" +
-      "otification\"\0000\001B\031\n\025rs.raf.pds.v5.z2.gRPC" +
-      "P\001b\006proto3"
+      "\001\022\026\n\016numberOfShares\030\004 \001(\005\022\013\n\003buy\030\005 \001(\010\"\034" +
+      "\n\010ClientId\022\020\n\010clientId\030\001 \001(\t\"\007\n\005Empty\"!\n" +
+      "\016AddOfferResult\022\017\n\007message\030\001 \001(\t2\271\002\n\rSto" +
+      "cksService\022\"\n\013GetUniqueId\022\006.Empty\032\t.Clie" +
+      "ntId\"\000\022#\n\010GetStock\022\r.StockRequest\032\006.Stoc" +
+      "k\"\000\022\"\n\014GetAllStocks\022\006.Empty\032\006.Stock\"\0000\001\022" +
+      "-\n\017SubscribeStocks\022\016.SubscribeUpit\032\006.Sto" +
+      "ck\"\0000\001\022\'\n\tGetOffers\022\016.AskBidRequest\032\006.Of" +
+      "fer\"\0000\001\022%\n\010AddOffer\022\006.Offer\032\017.AddOfferRe" +
+      "sult\"\000\022<\n\021SubToTransactions\022\t.ClientId\032\030" +
+      ".TransactionNotification\"\0000\001B\031\n\025rs.raf.p" +
+      "ds.v5.z2.gRPCP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -131,7 +131,7 @@ public final class StocksServiceOuterClass {
     internal_static_TransactionNotification_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TransactionNotification_descriptor,
-        new java.lang.String[] { "ClientId", "Symbol", "Price", "NumberOfShares", });
+        new java.lang.String[] { "ClientId", "Symbol", "Price", "NumberOfShares", "Buy", });
     internal_static_ClientId_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_ClientId_fieldAccessorTable = new

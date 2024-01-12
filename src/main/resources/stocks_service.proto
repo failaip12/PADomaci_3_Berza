@@ -53,6 +53,7 @@ message TransactionNotification {
     string symbol = 2;
     double price = 3;
     int32 numberOfShares = 4;
+    bool buy = 5;
 }
 message ClientId {
 	string clientId = 1;

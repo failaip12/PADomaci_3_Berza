@@ -249,8 +249,6 @@ public class StocksServiceServer {
             			
             			notifyTransaction(offer, request); //TODO fix this
             		}
-        			
-        			notifyTransaction(offer, request); //TODO fix this 
         			offersList.remove(offer);
         		}
         		//notify both parties
@@ -276,18 +274,27 @@ public class StocksServiceServer {
         }
         
         private void notifyTransaction(Offer buyOffer, Offer sellOffer) {
+        	int test = 0;
+        	if(buyOffer.getNumberOfOffers() > sellOffer.getNumberOfOffers()) {
+        		test = sellOffer.getNumberOfOffers();
+        	}
+        	else {
+        		test = buyOffer.getNumberOfOffers();
+        	}
         	TransactionNotification transactionNotificationBuyer = TransactionNotification.newBuilder()
                     .setClientId(buyOffer.getClientId())
                     .setSymbol(buyOffer.getSymbol())
                     .setPrice(buyOffer.getStockPrice())
-                    .setNumberOfShares(buyOffer.getNumberOfOffers())
+                    .setNumberOfShares(test)
+                    .setBuy(true)
                     .build();
         	
         	TransactionNotification transactionNotificationSeller = TransactionNotification.newBuilder()
                     .setClientId(sellOffer.getClientId())
                     .setSymbol(sellOffer.getSymbol())
                     .setPrice(sellOffer.getStockPrice())
-                    .setNumberOfShares(sellOffer.getNumberOfOffers())
+                    .setNumberOfShares(test)
+                    .setBuy(false)
                     .build();
         	
             StreamObserver<TransactionNotification> buyerObserver = idTransObserverMap.get(buyOffer.getClientId());

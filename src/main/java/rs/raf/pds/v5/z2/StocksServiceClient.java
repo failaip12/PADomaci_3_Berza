@@ -39,6 +39,11 @@ public class StocksServiceClient {
             @Override
             public void onNext(TransactionNotification transactionNotification) {
                 System.out.println("Transaction Notification:");
+                if(transactionNotification.getBuy()) {
+                	System.out.println("BUY: ");
+                } else {
+                	System.out.println("SELL: ");
+                }
                 System.out.println("Symbol: " + transactionNotification.getSymbol());
                 System.out.println("Price: " + transactionNotification.getPrice());
                 System.out.println("Number of Shares: " + transactionNotification.getNumberOfShares());
