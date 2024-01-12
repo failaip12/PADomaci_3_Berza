@@ -6,9 +6,10 @@ import io.grpc.stub.StreamObserver;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
+import rs.raf.pds.v5.z2.gRPC.StockArray;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
-import rs.raf.pds.v5.z2.gRPC.DateRequest;
+import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
@@ -16,7 +17,9 @@ import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Date;
@@ -45,7 +48,7 @@ public class StocksServiceServer {
 
     static class StocksServiceImpl extends StocksServiceImplBase {
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
-        private ConcurrentMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>>();
+        private ConcurrentMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>>();
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
         private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
         private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
@@ -55,7 +58,7 @@ public class StocksServiceServer {
         protected StocksServiceImpl() {
             initUnos();
             executorService.scheduleAtFixedRate(this::saveTransactionHistory, 0, 1, TimeUnit.MINUTES);
-            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 10, TimeUnit.SECONDS);
+            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 5, TimeUnit.SECONDS);
         }
 
         private void initUnos() {
@@ -96,7 +99,7 @@ public class StocksServiceServer {
         }
         
         @Override
-        public void getTransactionHistory(DateRequest request, StreamObserver<TransactionHistory> responseObserver) {
+        public void getTransactionHistory(TransactionHistoryRequest request, StreamObserver<TransactionHistory> responseObserver) {
         	// Create a LocalDate object
         	Calendar calendar = Calendar.getInstance();
         	calendar.set(Calendar.YEAR, request.getYear());
@@ -108,17 +111,21 @@ public class StocksServiceServer {
         	CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
         	if(history != null) {
         		for (TransactionHistory event : history) {
-        			responseObserver.onNext(event);
+        			if(event.getSymbol().equals(request.getSymbol())) {
+        				responseObserver.onNext(event);
+        			}
         		}
         	}
             responseObserver.onCompleted();
         }
         
         @Override
-        public void subscribeStocks(SubscribeUpit request, StreamObserver<Stock> responseObserver) {
+        public void subscribeStocks(SubscribeUpit request, StreamObserver<StockArray> responseObserver) {
+        	CopyOnWriteArrayList<String> temp = new CopyOnWriteArrayList<String>();
             for (String symbol : request.getSymbolsList()) {
-                subscriptions.computeIfAbsent(symbol.trim(), k -> new CopyOnWriteArrayList<StreamObserver<Stock>>()).add(responseObserver);
+            	temp.add(symbol);
             }
+        	subscriptions.put(responseObserver, temp);
         }
         
         @Override
@@ -393,14 +400,16 @@ public class StocksServiceServer {
         	//System.out.println(clientStockBalanceMap);
         	//System.out.println(stockOffersMap);
         	System.out.println(dateTransactionHistoryMap);
-            for (String symbol : subscriptions.keySet()) {
-                Stock stock = symbolStockMap.get(symbol);
-                if (stock != null) {
-                	CopyOnWriteArrayList<StreamObserver<Stock>> observers = subscriptions.get(symbol);
-                    for (StreamObserver<Stock> observer : observers) {
-                        observer.onNext(stock);
-                    }
-                }
+            for (StreamObserver<StockArray> observer : subscriptions.keySet()) {
+            	List<String> symbols = subscriptions.get(observer);
+            	Collections.sort(symbols);
+            	List<Stock> a1 = new ArrayList<Stock>();
+            	for (String symbol:symbols) {
+            		a1.add(symbolStockMap.get(symbol));
+            	}
+            	StockArray a = StockArray.newBuilder()
+            			.addAllStocks(a1).build();
+                observer.onNext(a);
             }
         }
     }

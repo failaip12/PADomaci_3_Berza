@@ -10,7 +10,7 @@ service StocksService {
 
 	rpc GetAllStocks(Empty) returns (stream Stock) {}
 
-	rpc SubscribeStocks(SubscribeUpit) returns (stream Stock) {}
+	rpc SubscribeStocks(SubscribeUpit) returns (stream StockArray) {}
 
 	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
@@ -18,7 +18,7 @@ service StocksService {
 
 	rpc SubToTransactions(ClientId) returns (stream TransactionNotification) {}
 
-	rpc GetTransactionHistory(DateRequest) returns (stream TransactionHistory) {}
+	rpc GetTransactionHistory(TransactionHistoryRequest) returns (stream TransactionHistory) {}
 }
 
 message Stock {
@@ -27,6 +27,10 @@ message Stock {
 	double startPrice = 3;
 	double changeInPrice = 4;
 	int64 dateUnix = 5;
+}
+
+message StockArray {
+	repeated Stock stocks = 1;
 }
 
 message SubscribeUpit {
@@ -38,10 +42,11 @@ message StockRequest {
 }
 
 
-message DateRequest {
+message TransactionHistoryRequest {
   int32 year = 1;
   int32 month = 2;
   int32 day = 3;
+  string symbol = 4;
 }
 
 message AskBidRequest {

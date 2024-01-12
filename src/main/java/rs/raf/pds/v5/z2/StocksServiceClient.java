@@ -9,10 +9,11 @@ import org.fusesource.jansi.Ansi;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
-import rs.raf.pds.v5.z2.gRPC.DateRequest;
+import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
+import rs.raf.pds.v5.z2.gRPC.StockArray;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
@@ -73,10 +74,10 @@ public class StocksServiceClient {
             ispisStock(s);
         }
 
-        StreamObserver<Stock> responseObserverSubscribe = new StreamObserver<Stock>() {
+        StreamObserver<StockArray> responseObserverSubscribe = new StreamObserver<StockArray>() {
             @Override
-            public void onNext(Stock stock) {
-            	ispisStockUpdate(stock);
+            public void onNext(StockArray array) {
+            	ispisStockUpdate(array);
             }
 
             @Override
@@ -269,18 +270,17 @@ public class StocksServiceClient {
 		        }
             }
             else if (command.startsWith("/getTransactionHistory")) {
-            	String[] parts = command.split("\\s+", 4);
-            	Integer year = null;
-            	Integer month = null;
-            	Integer day = null;
-            	if (parts.length == 4) {
+            	String[] parts = command.split("\\s+", 5);
+            	if (parts.length == 5) {
                     try {
-                        year = Integer.parseInt(parts[1].trim());
-                        month = Integer.parseInt(parts[2].trim());
-                        day = Integer.parseInt(parts[3].trim());
+                    	String symbol = parts[1].trim();
+                        int year = Integer.parseInt(parts[2].trim());
+                        int month = Integer.parseInt(parts[3].trim());
+                        int day = Integer.parseInt(parts[4].trim());
 
                         asyncStub.getTransactionHistory(
-                                DateRequest.newBuilder()
+                        		TransactionHistoryRequest.newBuilder()
+                        				.setSymbol(symbol)
                                         .setYear(year)
                                         .setMonth(month)
                                         .setDay(day)
@@ -292,7 +292,7 @@ public class StocksServiceClient {
                     }
 		        }
             	else {
-		        	System.out.println("Invalid getTransactionHistory format, the expected format is /getTransactionHistory year month day");
+		        	System.out.println("Invalid getTransactionHistory format, the expected format is /getTransactionHistory symbol year month day");
 		        }
             }
             else {
@@ -321,18 +321,30 @@ public class StocksServiceClient {
         					"Nr. Offers: " + sellOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", sellOffer.getStockPrice()));
     }
-    
-    private static void ispisStockUpdate(Stock stock) {
-        System.out.print(stock.getSymbol() + " " +
-                String.format("%.2f", stock.getStartPrice()) + " ");
+    private static void ispisStockUpdate(StockArray stocks) {
+        System.out.print("\n");
+        // Iterate through stocks to update the output map
+        for (Stock stock : stocks.getStocksList()) {
+            String symbol = stock.getSymbol();
+            StringBuilder outputBuilder = new StringBuilder();
+            outputBuilder.append(symbol).append(" ")
+                    .append(String.format("%.2f", stock.getStartPrice())).append(" ");
 
-        double changeInPrice = stock.getChangeInPrice();
-        if (changeInPrice > 0) {
-            System.out.print(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + "↑ \u2191").reset());
-        } else if (changeInPrice < 0) {
-            System.out.print(Ansi.ansi().fgRed().a(String.format("%.2f", changeInPrice) + "↓ \u2193").reset());
-        } else {
-            System.out.print(String.format("%.2f", changeInPrice));
+            double changeInPrice = stock.getChangeInPrice();
+            if (changeInPrice > 0) {
+                outputBuilder.append(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + "↑ \u2191").reset());
+            } else if (changeInPrice < 0) {
+                outputBuilder.append(Ansi.ansi().fgRed().a(String.format("%.2f", changeInPrice) + "↓ \u2193").reset());
+            } else {
+                outputBuilder.append(String.format("%.2f", changeInPrice));
+            }
+            System.out.print(outputBuilder.toString());
+            System.out.print("\n");
+        }
+
+        for (int i = 0; i < stocks.getStocksCount() + 1; i++) {
+            System.out.print(Ansi.ansi().cursorUpLine());
         }
     }
+
 }

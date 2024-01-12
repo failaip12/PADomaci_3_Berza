@@ -4,38 +4,39 @@
 package rs.raf.pds.v5.z2.gRPC;
 
 /**
- * Protobuf type {@code DateRequest}
+ * Protobuf type {@code TransactionHistoryRequest}
  */
-public final class DateRequest extends
+public final class TransactionHistoryRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:DateRequest)
-    DateRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:TransactionHistoryRequest)
+    TransactionHistoryRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use DateRequest.newBuilder() to construct.
-  private DateRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use TransactionHistoryRequest.newBuilder() to construct.
+  private TransactionHistoryRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private DateRequest() {
+  private TransactionHistoryRequest() {
+    symbol_ = "";
   }
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(
       UnusedPrivateParameter unused) {
-    return new DateRequest();
+    return new TransactionHistoryRequest();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_DateRequest_descriptor;
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionHistoryRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_DateRequest_fieldAccessorTable
+    return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionHistoryRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            rs.raf.pds.v5.z2.gRPC.DateRequest.class, rs.raf.pds.v5.z2.gRPC.DateRequest.Builder.class);
+            rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.class, rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.Builder.class);
   }
 
   public static final int YEAR_FIELD_NUMBER = 1;
@@ -71,6 +72,45 @@ private static final long serialVersionUID = 0L;
     return day_;
   }
 
+  public static final int SYMBOL_FIELD_NUMBER = 4;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object symbol_ = "";
+  /**
+   * <code>string symbol = 4;</code>
+   * @return The symbol.
+   */
+  @java.lang.Override
+  public java.lang.String getSymbol() {
+    java.lang.Object ref = symbol_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      symbol_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string symbol = 4;</code>
+   * @return The bytes for symbol.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getSymbolBytes() {
+    java.lang.Object ref = symbol_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      symbol_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -94,6 +134,9 @@ private static final long serialVersionUID = 0L;
     if (day_ != 0) {
       output.writeInt32(3, day_);
     }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, symbol_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -115,6 +158,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(3, day_);
     }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(symbol_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, symbol_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -125,10 +171,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.DateRequest)) {
+    if (!(obj instanceof rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest)) {
       return super.equals(obj);
     }
-    rs.raf.pds.v5.z2.gRPC.DateRequest other = (rs.raf.pds.v5.z2.gRPC.DateRequest) obj;
+    rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest other = (rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest) obj;
 
     if (getYear()
         != other.getYear()) return false;
@@ -136,6 +182,8 @@ private static final long serialVersionUID = 0L;
         != other.getMonth()) return false;
     if (getDay()
         != other.getDay()) return false;
+    if (!getSymbol()
+        .equals(other.getSymbol())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -153,74 +201,76 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getMonth();
     hash = (37 * hash) + DAY_FIELD_NUMBER;
     hash = (53 * hash) + getDay();
+    hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
+    hash = (53 * hash) + getSymbol().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(byte[] data)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseDelimitedFrom(java.io.InputStream input)
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseDelimitedFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest parseFrom(
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -233,7 +283,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.DateRequest prototype) {
+  public static Builder newBuilder(rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -249,26 +299,26 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * Protobuf type {@code DateRequest}
+   * Protobuf type {@code TransactionHistoryRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:DateRequest)
-      rs.raf.pds.v5.z2.gRPC.DateRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:TransactionHistoryRequest)
+      rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_DateRequest_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionHistoryRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_DateRequest_fieldAccessorTable
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionHistoryRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              rs.raf.pds.v5.z2.gRPC.DateRequest.class, rs.raf.pds.v5.z2.gRPC.DateRequest.Builder.class);
+              rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.class, rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.Builder.class);
     }
 
-    // Construct using rs.raf.pds.v5.z2.gRPC.DateRequest.newBuilder()
+    // Construct using rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.newBuilder()
     private Builder() {
 
     }
@@ -285,23 +335,24 @@ private static final long serialVersionUID = 0L;
       year_ = 0;
       month_ = 0;
       day_ = 0;
+      symbol_ = "";
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_DateRequest_descriptor;
+      return rs.raf.pds.v5.z2.gRPC.StocksServiceOuterClass.internal_static_TransactionHistoryRequest_descriptor;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.DateRequest getDefaultInstanceForType() {
-      return rs.raf.pds.v5.z2.gRPC.DateRequest.getDefaultInstance();
+    public rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest getDefaultInstanceForType() {
+      return rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.DateRequest build() {
-      rs.raf.pds.v5.z2.gRPC.DateRequest result = buildPartial();
+    public rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest build() {
+      rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -309,14 +360,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public rs.raf.pds.v5.z2.gRPC.DateRequest buildPartial() {
-      rs.raf.pds.v5.z2.gRPC.DateRequest result = new rs.raf.pds.v5.z2.gRPC.DateRequest(this);
+    public rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest buildPartial() {
+      rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest result = new rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.DateRequest result) {
+    private void buildPartial0(rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.year_ = year_;
@@ -327,20 +378,23 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.day_ = day_;
       }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.symbol_ = symbol_;
+      }
     }
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof rs.raf.pds.v5.z2.gRPC.DateRequest) {
-        return mergeFrom((rs.raf.pds.v5.z2.gRPC.DateRequest)other);
+      if (other instanceof rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest) {
+        return mergeFrom((rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.DateRequest other) {
-      if (other == rs.raf.pds.v5.z2.gRPC.DateRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest other) {
+      if (other == rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest.getDefaultInstance()) return this;
       if (other.getYear() != 0) {
         setYear(other.getYear());
       }
@@ -349,6 +403,11 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getDay() != 0) {
         setDay(other.getDay());
+      }
+      if (!other.getSymbol().isEmpty()) {
+        symbol_ = other.symbol_;
+        bitField0_ |= 0x00000008;
+        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -391,6 +450,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 24
+            case 34: {
+              symbol_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -503,6 +567,78 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
+
+    private java.lang.Object symbol_ = "";
+    /**
+     * <code>string symbol = 4;</code>
+     * @return The symbol.
+     */
+    public java.lang.String getSymbol() {
+      java.lang.Object ref = symbol_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        symbol_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string symbol = 4;</code>
+     * @return The bytes for symbol.
+     */
+    public com.google.protobuf.ByteString
+        getSymbolBytes() {
+      java.lang.Object ref = symbol_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        symbol_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string symbol = 4;</code>
+     * @param value The symbol to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSymbol(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      symbol_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string symbol = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSymbol() {
+      symbol_ = getDefaultInstance().getSymbol();
+      bitField0_ = (bitField0_ & ~0x00000008);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string symbol = 4;</code>
+     * @param value The bytes for symbol to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSymbolBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      symbol_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -516,23 +652,23 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:DateRequest)
+    // @@protoc_insertion_point(builder_scope:TransactionHistoryRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:DateRequest)
-  private static final rs.raf.pds.v5.z2.gRPC.DateRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:TransactionHistoryRequest)
+  private static final rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.DateRequest();
+    DEFAULT_INSTANCE = new rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest();
   }
 
-  public static rs.raf.pds.v5.z2.gRPC.DateRequest getDefaultInstance() {
+  public static rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<DateRequest>
-      PARSER = new com.google.protobuf.AbstractParser<DateRequest>() {
+  private static final com.google.protobuf.Parser<TransactionHistoryRequest>
+      PARSER = new com.google.protobuf.AbstractParser<TransactionHistoryRequest>() {
     @java.lang.Override
-    public DateRequest parsePartialFrom(
+    public TransactionHistoryRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -551,17 +687,17 @@ private static final long serialVersionUID = 0L;
     }
   };
 
-  public static com.google.protobuf.Parser<DateRequest> parser() {
+  public static com.google.protobuf.Parser<TransactionHistoryRequest> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<DateRequest> getParserForType() {
+  public com.google.protobuf.Parser<TransactionHistoryRequest> getParserForType() {
     return PARSER;
   }
 
   @java.lang.Override
-  public rs.raf.pds.v5.z2.gRPC.DateRequest getDefaultInstanceForType() {
+  public rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
