@@ -14,7 +14,7 @@ service StocksService {
 
 	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
-	rpc AddOffer(Offer) returns (Empty) {}
+	rpc AddOffer(Offer) returns (AddOfferResult) {}
 
 	rpc SubToTransactions(ClientId) returns (stream TransactionNotification) {}
 }
@@ -58,4 +58,10 @@ message ClientId {
 	string clientId = 1;
 }
 
-message Empty {}
+message Empty {
+
+}
+
+message AddOfferResult {
+	string message = 1;
+}

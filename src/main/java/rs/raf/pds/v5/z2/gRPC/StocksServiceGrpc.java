@@ -190,20 +190,20 @@ public final class StocksServiceGrpc {
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @java.lang.Deprecated // Use {@link #getAddOfferMethod()} instead. 
   public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
-      rs.raf.pds.v5.z2.gRPC.Empty> METHOD_ADD_OFFER = getAddOfferMethod();
+      rs.raf.pds.v5.z2.gRPC.AddOfferResult> METHOD_ADD_OFFER = getAddOfferMethod();
 
   private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod;
+      rs.raf.pds.v5.z2.gRPC.AddOfferResult> getAddOfferMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer,
-      rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.Empty> getAddOfferMethod;
+      rs.raf.pds.v5.z2.gRPC.AddOfferResult> getAddOfferMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.AddOfferResult> getAddOfferMethod;
     if ((getAddOfferMethod = StocksServiceGrpc.getAddOfferMethod) == null) {
       synchronized (StocksServiceGrpc.class) {
         if ((getAddOfferMethod = StocksServiceGrpc.getAddOfferMethod) == null) {
           StocksServiceGrpc.getAddOfferMethod = getAddOfferMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.Empty>newBuilder()
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.Offer, rs.raf.pds.v5.z2.gRPC.AddOfferResult>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "StocksService", "AddOffer"))
@@ -211,7 +211,7 @@ public final class StocksServiceGrpc {
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   rs.raf.pds.v5.z2.gRPC.Offer.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.Empty.getDefaultInstance()))
+                  rs.raf.pds.v5.z2.gRPC.AddOfferResult.getDefaultInstance()))
                   .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("AddOffer"))
                   .build();
           }
@@ -317,7 +317,7 @@ public final class StocksServiceGrpc {
     /**
      */
     public void addOffer(rs.raf.pds.v5.z2.gRPC.Offer request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.AddOfferResult> responseObserver) {
       asyncUnimplementedUnaryCall(getAddOfferMethod(), responseObserver);
     }
 
@@ -370,7 +370,7 @@ public final class StocksServiceGrpc {
             asyncUnaryCall(
               new MethodHandlers<
                 rs.raf.pds.v5.z2.gRPC.Offer,
-                rs.raf.pds.v5.z2.gRPC.Empty>(
+                rs.raf.pds.v5.z2.gRPC.AddOfferResult>(
                   this, METHODID_ADD_OFFER)))
           .addMethod(
             getSubToTransactionsMethod(),
@@ -444,7 +444,7 @@ public final class StocksServiceGrpc {
     /**
      */
     public void addOffer(rs.raf.pds.v5.z2.gRPC.Offer request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.AddOfferResult> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getAddOfferMethod(), getCallOptions()), request, responseObserver);
     }
@@ -516,7 +516,7 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public rs.raf.pds.v5.z2.gRPC.Empty addOffer(rs.raf.pds.v5.z2.gRPC.Offer request) {
+    public rs.raf.pds.v5.z2.gRPC.AddOfferResult addOffer(rs.raf.pds.v5.z2.gRPC.Offer request) {
       return blockingUnaryCall(
           getChannel(), getAddOfferMethod(), getCallOptions(), request);
     }
@@ -566,7 +566,7 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Empty> addOffer(
+    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.AddOfferResult> addOffer(
         rs.raf.pds.v5.z2.gRPC.Offer request) {
       return futureUnaryCall(
           getChannel().newCall(getAddOfferMethod(), getCallOptions()), request);
@@ -620,7 +620,7 @@ public final class StocksServiceGrpc {
           break;
         case METHODID_ADD_OFFER:
           serviceImpl.addOffer((rs.raf.pds.v5.z2.gRPC.Offer) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty>) responseObserver);
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.AddOfferResult>) responseObserver);
           break;
         case METHODID_SUB_TO_TRANSACTIONS:
           serviceImpl.subToTransactions((rs.raf.pds.v5.z2.gRPC.ClientId) request,

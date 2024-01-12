@@ -54,6 +54,11 @@ public final class StocksServiceOuterClass {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Empty_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_AddOfferResult_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_AddOfferResult_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -75,16 +80,17 @@ public final class StocksServiceOuterClass {
       "\005 \001(\t\"b\n\027TransactionNotification\022\020\n\010clie" +
       "ntId\030\001 \001(\t\022\016\n\006symbol\030\002 \001(\t\022\r\n\005price\030\003 \001(" +
       "\001\022\026\n\016numberOfShares\030\004 \001(\005\"\034\n\010ClientId\022\020\n" +
-      "\010clientId\030\001 \001(\t\"\007\n\005Empty2\260\002\n\rStocksServi" +
-      "ce\022\"\n\013GetUniqueId\022\006.Empty\032\t.ClientId\"\000\022#" +
-      "\n\010GetStock\022\r.StockRequest\032\006.Stock\"\000\022\"\n\014G" +
-      "etAllStocks\022\006.Empty\032\006.Stock\"\0000\001\022-\n\017Subsc" +
-      "ribeStocks\022\016.SubscribeUpit\032\006.Stock\"\0000\001\022\'" +
-      "\n\tGetOffers\022\016.AskBidRequest\032\006.Offer\"\0000\001\022" +
-      "\034\n\010AddOffer\022\006.Offer\032\006.Empty\"\000\022<\n\021SubToTr" +
-      "ansactions\022\t.ClientId\032\030.TransactionNotif" +
-      "ication\"\0000\001B\031\n\025rs.raf.pds.v5.z2.gRPCP\001b\006" +
-      "proto3"
+      "\010clientId\030\001 \001(\t\"\007\n\005Empty\"!\n\016AddOfferResu" +
+      "lt\022\017\n\007message\030\001 \001(\t2\271\002\n\rStocksService\022\"\n" +
+      "\013GetUniqueId\022\006.Empty\032\t.ClientId\"\000\022#\n\010Get" +
+      "Stock\022\r.StockRequest\032\006.Stock\"\000\022\"\n\014GetAll" +
+      "Stocks\022\006.Empty\032\006.Stock\"\0000\001\022-\n\017SubscribeS" +
+      "tocks\022\016.SubscribeUpit\032\006.Stock\"\0000\001\022\'\n\tGet" +
+      "Offers\022\016.AskBidRequest\032\006.Offer\"\0000\001\022%\n\010Ad" +
+      "dOffer\022\006.Offer\032\017.AddOfferResult\"\000\022<\n\021Sub" +
+      "ToTransactions\022\t.ClientId\032\030.TransactionN" +
+      "otification\"\0000\001B\031\n\025rs.raf.pds.v5.z2.gRPC" +
+      "P\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -138,6 +144,12 @@ public final class StocksServiceOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Empty_descriptor,
         new java.lang.String[] { });
+    internal_static_AddOfferResult_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_AddOfferResult_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_AddOfferResult_descriptor,
+        new java.lang.String[] { "Message", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

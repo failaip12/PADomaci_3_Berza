@@ -6,6 +6,7 @@ import io.grpc.stub.StreamObserver;
 import org.fusesource.jansi.AnsiConsole;
 import org.fusesource.jansi.Ansi;
 
+import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.Empty;
@@ -121,6 +122,23 @@ public class StocksServiceClient {
             }
         };
         
+        StreamObserver<AddOfferResult> responseObserverAddOfferResult = new StreamObserver<AddOfferResult>() {
+            @Override
+            public void onNext(AddOfferResult result) {
+            	System.err.println(result);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error occurred: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        };
+        
         System.out.print("Enter company symbols to subscribe (comma-separated): ");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String symbolsInput;
@@ -160,7 +178,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(true)
 	            			.setClientId(clientId).build()
-	            			, responseObserverEmpty);
+	            			, responseObserverAddOfferResult);
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
 		        }
@@ -176,7 +194,7 @@ public class StocksServiceClient {
 	            			.setNumberOfOffers(numberOfOffers)
 	            			.setBuy(false)
 	            			.setClientId(clientId).build()
-	            			, responseObserverEmpty);
+	            			, responseObserverAddOfferResult);
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
 		        }

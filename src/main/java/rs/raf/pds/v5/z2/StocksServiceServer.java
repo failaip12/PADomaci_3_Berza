@@ -11,6 +11,7 @@ import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
+import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -39,14 +40,14 @@ public class StocksServiceServer {
     static class StocksServiceImpl extends StocksServiceImplBase {
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
         private ConcurrentMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<StreamObserver<Stock>>>();
-        
+        private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
         private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
         private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
             initUnos();
-            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 5, TimeUnit.SECONDS);
+            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 10, TimeUnit.SECONDS);
         }
 
         private void initUnos() {
@@ -64,6 +65,11 @@ public class StocksServiceServer {
                     .build();
             
             // Send the response to the client
+            ConcurrentMap<String,Integer> map = new ConcurrentHashMap<String, Integer>();
+            for (Stock stock : symbolStockMap.values()) {
+            	map.put(stock.getSymbol(), 1000);
+            }
+            clientStockBalanceMap.put(clientId, map);
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
@@ -105,24 +111,52 @@ public class StocksServiceServer {
         }
         
         @Override
-        public void addOffer(Offer request, StreamObserver<Empty> responseObserver) {
+        public void addOffer(Offer request, StreamObserver<AddOfferResult> responseObserver) {
         	Stock stock = symbolStockMap.get(request.getSymbol());
+            ConcurrentMap<String, Integer> clientBalance = clientStockBalanceMap.get(request.getClientId());
+            int currentStockBalance = clientBalance.getOrDefault(request.getSymbol(), 0);
+            StringBuilder responseMessage = new StringBuilder();
+
+            if (!request.getBuy() && currentStockBalance < request.getNumberOfOffers()) {
+                responseObserver.onNext(AddOfferResult.newBuilder()
+					 .setMessage("Insufficient stocks to sell. You have " + currentStockBalance + " " + request.getSymbol() + " stocks").build());
+                responseObserver.onCompleted();
+                return;
+            }
         	CopyOnWriteArrayList<Offer> offersList = stockOffersMap.get(stock);
             if (offersList == null) {
             	offersList = new CopyOnWriteArrayList<>();
+            	offersList.add(request);
                 stockOffersMap.put(stock, offersList);
+                responseObserver.onNext(AddOfferResult.newBuilder()
+   					 .setMessage("DONE").build());
+	       		responseObserver.onCompleted();
                 return;
             }
+            
+            CopyOnWriteArrayList<Offer> userOffers = stockOffersMap.values().stream()
+                    .flatMap(List::stream)
+                    .filter(offer -> offer.getClientId().equals(request.getClientId()) && offer.getSymbol().equals(request.getSymbol()))
+                    .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+
+            for(Offer offer:userOffers) {
+            	if(request.getBuy() == offer.getBuy()) {
+                	responseMessage.append("You already have an existing order for " + request.getSymbol() + " It will be replaced with your new order.");
+                	responseMessage.append("\n");
+                	offersList.remove(offer);
+            	}
+            }
+            
             List<Offer> offers = offersList.stream()
                     .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()))
                     .collect(Collectors.toList());
     		int numberOfOffersRequest = request.getNumberOfOffers();
             for (Offer offer:offers) {
-            	if(numberOfOffersRequest <= 0) {
+            	if(numberOfOffersRequest == 0) {
             		break;
             	}
         		if(offer.getNumberOfOffers() > numberOfOffersRequest) {
-        			int numberOfOffersOffer = offer.getNumberOfOffers() - request.getNumberOfOffers();
+        			int numberOfOffersOffer = offer.getNumberOfOffers() - numberOfOffersRequest;
             		Offer updatedOffer = Offer.newBuilder()
 						 .setBuy(offer.getBuy())
 						 .setClientId(offer.getClientId())
@@ -130,8 +164,30 @@ public class StocksServiceServer {
 						 .setSymbol(offer.getSymbol())
 						 .setNumberOfOffers(numberOfOffersOffer).build();
             		//update offer in list with updated offer
-            		notifyTransaction(request, updatedOffer); //TODO fix this 
             		offersList.set(offersList.indexOf(offer), updatedOffer);
+            		if(request.getBuy()) {
+            			currentStockBalance+=numberOfOffersRequest;
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance - numberOfOffersRequest;
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+            			
+            			notifyTransaction(request, updatedOffer); //TODO fix this 
+            		}
+            		else {
+            			currentStockBalance-=numberOfOffersRequest;
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance + numberOfOffersRequest;
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+            			
+            			notifyTransaction(updatedOffer, request); //TODO fix this 
+            		}
+            		numberOfOffersRequest = 0;
         		}
         		else if(offer.getNumberOfOffers() < numberOfOffersRequest) {
                     numberOfOffersRequest -= offer.getNumberOfOffers();
@@ -142,12 +198,58 @@ public class StocksServiceServer {
                             .setSymbol(request.getSymbol())
                             .setNumberOfOffers(numberOfOffersRequest).build();
             		//update request with updated offer, put it in list and remove offer from list
-            		notifyTransaction(updatedRequest, offer); //TODO fix this
+            		if(request.getBuy()) {
+            			currentStockBalance+=offer.getNumberOfOffers();
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance - offer.getNumberOfOffers();
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+
+                		notifyTransaction(updatedRequest, offer); //TODO fix this
+            		}
+            		else {
+            			currentStockBalance-=offer.getNumberOfOffers();
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance + offer.getNumberOfOffers();
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+            			
+
+                		notifyTransaction(offer, updatedRequest); //TODO fix this
+            		}
             		offersList.remove(offer);
         		}
         		else {
             		//remove offer from list
         			numberOfOffersRequest = 0;
+        			
+            		if(request.getBuy()) {
+            			currentStockBalance+=offer.getNumberOfOffers();
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance - offer.getNumberOfOffers();
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+            			
+            			notifyTransaction(request, offer); //TODO fix this
+            		}
+            		else {
+            			currentStockBalance-=offer.getNumberOfOffers();
+            			
+            			ConcurrentMap<String, Integer> clientBalanceOffer = clientStockBalanceMap.get(offer.getClientId());
+            			int oldOfferBalance = clientBalanceOffer.get(offer.getSymbol());
+            			int newOfferBalance = oldOfferBalance + offer.getNumberOfOffers();
+            			clientBalanceOffer.put(offer.getSymbol(), newOfferBalance);
+            			clientStockBalanceMap.put(offer.getClientId(), clientBalanceOffer);
+            			
+            			notifyTransaction(offer, request); //TODO fix this
+            		}
+        			
         			notifyTransaction(offer, request); //TODO fix this 
         			offersList.remove(offer);
         		}
@@ -163,7 +265,13 @@ public class StocksServiceServer {
 	            offersList.add(updatedRequest);
             }
             stockOffersMap.put(stock, offersList);
-    		responseObserver.onNext(Empty.newBuilder().build());
+            
+            clientBalance.put(request.getSymbol(), currentStockBalance);
+            clientStockBalanceMap.put(request.getClientId(), clientBalance);
+            responseMessage.append("DONE");
+            
+            responseObserver.onNext(AddOfferResult.newBuilder()
+					 .setMessage(responseMessage.toString()).build());
     		responseObserver.onCompleted();
         }
         
@@ -195,6 +303,8 @@ public class StocksServiceServer {
         }
         
         private void sendUpdates() {
+        	System.out.println(clientStockBalanceMap);
+        	System.out.println(stockOffersMap);
             for (String symbol : subscriptions.keySet()) {
                 Stock stock = symbolStockMap.get(symbol);
                 if (stock != null) {

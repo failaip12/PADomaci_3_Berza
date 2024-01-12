@@ -1,3 +1,5 @@
+rs\raf\pds\v5\z2\gRPC\AddOfferResult.class
+rs\raf\pds\v5\z2\gRPC\AddOfferResultOrBuilder.class
 rs\raf\pds\v5\z2\gRPC\StockRequest$1.class
 rs\raf\pds\v5\z2\gRPC\AskBidRequest$Builder.class
 rs\raf\pds\v5\z2\gRPC\Stock$Builder.class
@@ -7,9 +9,11 @@ rs\raf\pds\v5\z2\gRPC\OfferOrBuilder.class
 rs\raf\pds\v5\z2\gRPC\StockRequest$Builder.class
 rs\raf\pds\v5\z2\gRPC\StocksServiceGrpc$MethodHandlers.class
 rs\raf\pds\v5\z2\gRPC\Empty.class
+rs\raf\pds\v5\z2\StocksServiceClient$5.class
 rs\raf\pds\v5\z2\gRPC\Stock.class
 rs\raf\pds\v5\z2\StocksServiceClient.class
 rs\raf\pds\v5\z2\gRPC\SubscribeUpit.class
+rs\raf\pds\v5\z2\gRPC\AddOfferResult$Builder.class
 rs\raf\pds\v5\z2\gRPC\EmptyOrBuilder.class
 rs\raf\pds\v5\z2\gRPC\ClientId.class
 rs\raf\pds\v5\z2\gRPC\StocksServiceGrpc$StocksServiceFileDescriptorSupplier.class
@@ -25,6 +29,7 @@ rs\raf\pds\v5\z2\gRPC\StocksServiceGrpc$StocksServiceFutureStub.class
 rs\raf\pds\v5\z2\gRPC\TransactionNotification$1.class
 rs\raf\pds\v5\z2\gRPC\StockRequest.class
 rs\raf\pds\v5\z2\gRPC\SubscribeUpitOrBuilder.class
+rs\raf\pds\v5\z2\gRPC\AddOfferResult$1.class
 rs\raf\pds\v5\z2\gRPC\StocksServiceGrpc$StocksServiceBaseDescriptorSupplier.class
 rs\raf\pds\v5\z2\gRPC\TransactionNotification$Builder.class
 rs\raf\pds\v5\z2\gRPC\StocksServiceGrpc$StocksServiceStub.class
