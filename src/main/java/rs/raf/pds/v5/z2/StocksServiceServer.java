@@ -15,8 +15,7 @@ import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
-import java.io.IOException;
-import java.time.LocalDate;
+import java.io.*;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class StocksServiceServer {
+    private static final String DATA_FILE_PATH = "transactionHistory.txt";
+    private static final String BACKUP_FILE_PATH = "transactionHistoryBackup.txt";
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = ServerBuilder
@@ -53,6 +54,7 @@ public class StocksServiceServer {
 
         protected StocksServiceImpl() {
             initUnos();
+            executorService.scheduleAtFixedRate(this::saveTransactionHistory, 0, 1, TimeUnit.MINUTES);
             executorService.scheduleAtFixedRate(this::sendUpdates, 0, 10, TimeUnit.SECONDS);
         }
 
@@ -359,6 +361,32 @@ public class StocksServiceServer {
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
             return calendar.getTime();
+        }
+        
+        private void saveTransactionHistory() {
+            try {
+                File existingFile = new File(DATA_FILE_PATH);
+                File backupFile = new File(BACKUP_FILE_PATH);
+                if (existingFile.exists()) {
+                    copyFile(existingFile, backupFile);
+                }
+                try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(existingFile))) {
+                    outputStream.writeObject(dateTransactionHistoryMap);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        private void copyFile(File source, File destination) throws IOException {
+            try (InputStream inputStream = new FileInputStream(source);
+                 OutputStream outputStream = new FileOutputStream(destination)) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+            }
         }
         
         private void sendUpdates() {
