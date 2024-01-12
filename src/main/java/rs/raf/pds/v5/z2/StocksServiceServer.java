@@ -22,7 +22,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -52,7 +55,7 @@ public class StocksServiceServer {
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
         private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
         private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
-        private ConcurrentMap<Date, CopyOnWriteArrayList<TransactionHistory>> dateTransactionHistoryMap = new ConcurrentHashMap<Date, CopyOnWriteArrayList<TransactionHistory>>();
+        private ConcurrentMap<Instant, CopyOnWriteArrayList<TransactionHistory>> dateTransactionHistoryMap = new ConcurrentHashMap<Instant, CopyOnWriteArrayList<TransactionHistory>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
@@ -100,22 +103,15 @@ public class StocksServiceServer {
         
         @Override
         public void getTransactionHistory(TransactionHistoryRequest request, StreamObserver<TransactionHistory> responseObserver) {
-        	// Create a LocalDate object
-        	Calendar calendar = Calendar.getInstance();
-        	calendar.set(Calendar.YEAR, request.getYear());
-        	calendar.set(Calendar.MONTH, request.getMonth() - 1);
-        	calendar.set(Calendar.DAY_OF_MONTH, request.getDay());
-
-        	// Convert Calendar to java.util.Date
-        	Date date = truncateToDay(calendar.getTime());
-        	CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
-        	if(history != null) {
-        		for (TransactionHistory event : history) {
-        			if(event.getSymbol().equals(request.getSymbol())) {
-        				responseObserver.onNext(event);
-        			}
-        		}
-        	}
+        	Instant date = Instant.ofEpochMilli(LocalDateTime.of(request.getYear(), request.getMonth(), request.getDay() ,0, 0).atZone(ZoneId.systemDefault()).toInstant().truncatedTo(ChronoUnit.DAYS).toEpochMilli());
+            CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
+            if (history != null) {
+                for (TransactionHistory event : history) {
+                    if (event.getSymbol().equals(request.getSymbol())) {
+                        responseObserver.onNext(event);
+                    }
+                }
+            }
             responseObserver.onCompleted();
         }
         
@@ -341,33 +337,22 @@ public class StocksServiceServer {
             if (sellerObserver != null) {
             	sellerObserver.onNext(transactionNotificationSeller);
             }
-            long currentTimeMillis = System.currentTimeMillis();
+            Instant currentTime = Instant.now();
         	TransactionHistory transactionHistory = TransactionHistory.newBuilder()
                     .setClientIdSeller(sellOffer.getClientId())
                     .setClientIdBuyer(buyOffer.getClientId())
                     .setSymbol(sellOffer.getSymbol())
                     .setPrice(sellOffer.getStockPrice())
                     .setNumberOfShares(test)
-                    .setDateUnix(currentTimeMillis)
+                    .setDateUnix(currentTime.toEpochMilli())
                     .build();
-        	Date transactionDate = truncateToDay(new Date(currentTimeMillis));
+        	Instant transactionDate = truncateToDay(currentTime);
 
-        	CopyOnWriteArrayList<TransactionHistory> old = dateTransactionHistoryMap.get(transactionDate);
-        	if (old == null) {
-        	    old = new CopyOnWriteArrayList<TransactionHistory>();
-        	}
-        	old.add(transactionHistory);
-        	dateTransactionHistoryMap.put(transactionDate, old);
+        	dateTransactionHistoryMap.computeIfAbsent(transactionDate, k -> new CopyOnWriteArrayList<>()).add(transactionHistory);
         }
         
-        private static Date truncateToDay(Date date) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            return calendar.getTime();
+        private Instant truncateToDay(Instant instant) {
+            return instant.truncatedTo(ChronoUnit.DAYS);
         }
         
         private void saveTransactionHistory() {
