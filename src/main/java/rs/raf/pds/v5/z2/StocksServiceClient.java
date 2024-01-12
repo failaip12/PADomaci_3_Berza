@@ -9,11 +9,13 @@ import org.fusesource.jansi.Ansi;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
+import rs.raf.pds.v5.z2.gRPC.DateRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
+import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.BufferedReader;
@@ -127,6 +129,23 @@ public class StocksServiceClient {
             }
         };
         
+        StreamObserver<TransactionHistory> responseObserverTransactionHistory = new StreamObserver<TransactionHistory>() {
+            @Override
+            public void onNext(TransactionHistory history) {
+            	System.out.println(history);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.err.println("Error occurred: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        };
+        
         StreamObserver<AddOfferResult> responseObserverAddOfferResult = new StreamObserver<AddOfferResult>() {
             @Override
             public void onNext(AddOfferResult result) {
@@ -175,15 +194,20 @@ public class StocksServiceClient {
             	String[] parts = command.split("\\s+", 4);
             	if (parts.length == 4) {
 		            String symbol = parts[1].trim();
-		            double stockPrice = Double.parseDouble(parts[2].trim());
-		            int numberOfOffers = Integer.parseInt(parts[3].trim());
-	            	asyncStub.addOffer(Offer.newBuilder()
-	            			.setSymbol(symbol)
-	            			.setStockPrice(stockPrice)
-	            			.setNumberOfOffers(numberOfOffers)
-	            			.setBuy(true)
-	            			.setClientId(clientId).build()
-	            			, responseObserverAddOfferResult);
+		            try {
+			            int numberOfOffers = Integer.parseInt(parts[3].trim());
+			            double stockPrice = Double.parseDouble(parts[2].trim());
+		            	asyncStub.addOffer(Offer.newBuilder()
+		            			.setSymbol(symbol)
+		            			.setStockPrice(stockPrice)
+		            			.setNumberOfOffers(numberOfOffers)
+		            			.setBuy(true)
+		            			.setClientId(clientId).build()
+		            			, responseObserverAddOfferResult);
+		            }
+		            catch (NumberFormatException e) {
+		            	System.out.println("numberOfOffers or stockPrice is an invalid number");
+					}
 		        } else {
 		        	System.out.println("Invalid buyOffer format, the expected format is /buyOffer symbol stockPrice numberOfOffers");
 		        }
@@ -191,15 +215,20 @@ public class StocksServiceClient {
             	String[] parts = command.split("\\s+", 4);
             	if (parts.length == 4) {
 		            String symbol = parts[1].trim();
-		            double stockPrice = Double.parseDouble(parts[2].trim());
-		            int numberOfOffers = Integer.parseInt(parts[3].trim());
-	            	asyncStub.addOffer(Offer.newBuilder()
-	            			.setSymbol(symbol)
-	            			.setStockPrice(stockPrice)
-	            			.setNumberOfOffers(numberOfOffers)
-	            			.setBuy(false)
-	            			.setClientId(clientId).build()
-	            			, responseObserverAddOfferResult);
+		            try {
+			            double stockPrice = Double.parseDouble(parts[2].trim());
+			            int numberOfOffers = Integer.parseInt(parts[3].trim());
+		            	asyncStub.addOffer(Offer.newBuilder()
+		            			.setSymbol(symbol)
+		            			.setStockPrice(stockPrice)
+		            			.setNumberOfOffers(numberOfOffers)
+		            			.setBuy(false)
+		            			.setClientId(clientId).build()
+		            			, responseObserverAddOfferResult);
+		            }
+		            catch (NumberFormatException e) {
+		            	System.out.println("numberOfOffers or stockPrice is an invalid number");
+					}
 		        } else {
 		        	System.out.println("Invalid sellOffer format, the expected format is /sellOffer symbol stockPrice numberOfOffers");
 		        }
@@ -207,11 +236,16 @@ public class StocksServiceClient {
             	String[] parts = command.split("\\s+", 3);
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
-		            int numberOfOffers = Integer.parseInt(parts[2].trim());
-	            	asyncStub.getOffers(AskBidRequest.newBuilder()
-	            			.setSymbol(symbol)
-	            			.setNumberOfOffers(numberOfOffers)
-	            			.setAsk(false).build(), responseObserverOffers);
+		            try {
+			            int numberOfOffers = Integer.parseInt(parts[2].trim());
+		            	asyncStub.getOffers(AskBidRequest.newBuilder()
+		            			.setSymbol(symbol)
+		            			.setNumberOfOffers(numberOfOffers)
+		            			.setAsk(false).build(), responseObserverOffers);
+		            }
+		            catch (NumberFormatException e) {
+		            	System.out.println("numberOfOffer is an invalid integer");
+					}
 		        } else {
 		        	System.out.println("Invalid getBuyOffers format, the expected format is /getBuyOffers symbol numberOfOffers");
 		        }
@@ -219,15 +253,49 @@ public class StocksServiceClient {
             	String[] parts = command.split("\\s+", 3);
             	if (parts.length == 3) {
 		            String symbol = parts[1].trim();
-		            int numberOfOffers = Integer.parseInt(parts[2].trim());
-	            	asyncStub.getOffers(AskBidRequest.newBuilder()
-	            			.setSymbol(symbol)
-	            			.setNumberOfOffers(numberOfOffers)
-	            			.setAsk(true).build(), responseObserverOffers);
-		        } else {
-		        	System.out.println("Invalid getSellOffers format, the expected format is /getBuyOffers symbol numberOfOffers");
+		            try {
+			            int numberOfOffers = Integer.parseInt(parts[2].trim());
+		            	asyncStub.getOffers(AskBidRequest.newBuilder()
+		            			.setSymbol(symbol)
+		            			.setNumberOfOffers(numberOfOffers)
+		            			.setAsk(true).build(), responseObserverOffers);
+		            }
+		            catch (NumberFormatException e) {
+		            	System.out.println("numberOfOffer is an invalid integer");
+					}
 		        }
-            } else {
+            	else {
+		        	System.out.println("Invalid getSellOffers format, the expected format is /getSellOffers symbol numberOfOffers");
+		        }
+            }
+            else if (command.startsWith("/getTransactionHistory")) {
+            	String[] parts = command.split("\\s+", 4);
+            	Integer year = null;
+            	Integer month = null;
+            	Integer day = null;
+            	if (parts.length == 4) {
+                    try {
+                        year = Integer.parseInt(parts[1].trim());
+                        month = Integer.parseInt(parts[2].trim());
+                        day = Integer.parseInt(parts[3].trim());
+
+                        asyncStub.getTransactionHistory(
+                                DateRequest.newBuilder()
+                                        .setYear(year)
+                                        .setMonth(month)
+                                        .setDay(day)
+                                        .build(),
+                                responseObserverTransactionHistory
+                        );
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input: Please provide valid integers for year, month, and day.");
+                    }
+		        }
+            	else {
+		        	System.out.println("Invalid getTransactionHistory format, the expected format is /getTransactionHistory year month day");
+		        }
+            }
+            else {
                 System.out.println("Invalid command. Please try again.");
             }
         }

@@ -8,14 +8,19 @@ import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
+import rs.raf.pds.v5.z2.gRPC.DateRequest;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
+import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -43,6 +48,7 @@ public class StocksServiceServer {
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
         private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
         private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
+        private ConcurrentMap<Date, CopyOnWriteArrayList<TransactionHistory>> dateTransactionHistoryMap = new ConcurrentHashMap<Date, CopyOnWriteArrayList<TransactionHistory>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
@@ -84,6 +90,25 @@ public class StocksServiceServer {
             for (Stock stock : symbolStockMap.values()) {
                 responseObserver.onNext(stock);
             }
+            responseObserver.onCompleted();
+        }
+        
+        @Override
+        public void getTransactionHistory(DateRequest request, StreamObserver<TransactionHistory> responseObserver) {
+        	// Create a LocalDate object
+        	Calendar calendar = Calendar.getInstance();
+        	calendar.set(Calendar.YEAR, request.getYear());
+        	calendar.set(Calendar.MONTH, request.getMonth() - 1);
+        	calendar.set(Calendar.DAY_OF_MONTH, request.getDay());
+
+        	// Convert Calendar to java.util.Date
+        	Date date = truncateToDay(calendar.getTime());
+        	CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
+        	if(history != null) {
+        		for (TransactionHistory event : history) {
+        			responseObserver.onNext(event);
+        		}
+        	}
             responseObserver.onCompleted();
         }
         
@@ -307,11 +332,39 @@ public class StocksServiceServer {
             if (sellerObserver != null) {
             	sellerObserver.onNext(transactionNotificationSeller);
             }
+            long currentTimeMillis = System.currentTimeMillis();
+        	TransactionHistory transactionHistory = TransactionHistory.newBuilder()
+                    .setClientIdSeller(sellOffer.getClientId())
+                    .setClientIdBuyer(buyOffer.getClientId())
+                    .setSymbol(sellOffer.getSymbol())
+                    .setPrice(sellOffer.getStockPrice())
+                    .setNumberOfShares(test)
+                    .setDateUnix(currentTimeMillis)
+                    .build();
+        	Date transactionDate = truncateToDay(new Date(currentTimeMillis));
+
+        	CopyOnWriteArrayList<TransactionHistory> old = dateTransactionHistoryMap.get(transactionDate);
+        	if (old == null) {
+        	    old = new CopyOnWriteArrayList<TransactionHistory>();
+        	}
+        	old.add(transactionHistory);
+        	dateTransactionHistoryMap.put(transactionDate, old);
+        }
+        
+        private static Date truncateToDay(Date date) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar.getTime();
         }
         
         private void sendUpdates() {
-        	System.out.println(clientStockBalanceMap);
-        	System.out.println(stockOffersMap);
+        	//System.out.println(clientStockBalanceMap);
+        	//System.out.println(stockOffersMap);
+        	System.out.println(dateTransactionHistoryMap);
             for (String symbol : subscriptions.keySet()) {
                 Stock stock = symbolStockMap.get(symbol);
                 if (stock != null) {

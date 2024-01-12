@@ -17,6 +17,8 @@ service StocksService {
 	rpc AddOffer(Offer) returns (AddOfferResult) {}
 
 	rpc SubToTransactions(ClientId) returns (stream TransactionNotification) {}
+
+	rpc GetTransactionHistory(DateRequest) returns (stream TransactionHistory) {}
 }
 
 message Stock {
@@ -35,6 +37,13 @@ message StockRequest {
     string symbol = 1;
 }
 
+
+message DateRequest {
+  int32 year = 1;
+  int32 month = 2;
+  int32 day = 3;
+}
+
 message AskBidRequest {
 	string symbol = 1;
 	int32 numberOfOffers = 2;
@@ -48,6 +57,7 @@ message Offer {
 	bool buy = 4;
 	string clientId = 5;
 }
+
 message TransactionNotification {
 	string clientId = 1;
     string symbol = 2;
@@ -55,6 +65,16 @@ message TransactionNotification {
     int32 numberOfShares = 4;
     bool buy = 5;
 }
+
+message TransactionHistory {
+	string clientIdSeller = 1;
+	string clientIdBuyer = 2;
+    string symbol = 3;
+    double price = 4;
+    int32 numberOfShares = 5;
+    int64 dateUnix = 6;
+}
+
 message ClientId {
 	string clientId = 1;
 }
