@@ -52,7 +52,7 @@ public class StocksServiceServer {
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
         private ConcurrentMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>>();
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
-        private ConcurrentMap<Stock, CopyOnWriteArrayList<Offer>> stockOffersMap = new ConcurrentHashMap<Stock, CopyOnWriteArrayList<Offer>>();
+        private ConcurrentMap<String, CopyOnWriteArrayList<Offer>> stockSymbolOffersMap = new ConcurrentHashMap<String, CopyOnWriteArrayList<Offer>>();
         private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
         private ConcurrentMap<Instant, CopyOnWriteArrayList<TransactionHistory>> dateTransactionHistoryMap = new ConcurrentHashMap<Instant, CopyOnWriteArrayList<TransactionHistory>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -129,7 +129,7 @@ public class StocksServiceServer {
         
         @Override
         public void getOffers(AskBidRequest request, StreamObserver<Offer> responseObserver) {
-            CopyOnWriteArrayList<Offer> offerList = stockOffersMap.get(symbolStockMap.get(request.getSymbol()));
+            CopyOnWriteArrayList<Offer> offerList = stockSymbolOffersMap.get(request.getSymbol());
             if (offerList != null) {
                 List<Offer> offers = offerList.stream()
                         .filter(offer -> (request.getAsk() && !offer.getBuy()) || (!request.getAsk() && offer.getBuy()))
@@ -145,36 +145,36 @@ public class StocksServiceServer {
         
         @Override
         public void addOffer(Offer request, StreamObserver<AddOfferResult> responseObserver) {
-        	Stock stock = symbolStockMap.get(request.getSymbol());
             ConcurrentMap<String, Integer> clientBalance = clientStockBalanceMap.get(request.getClientId());
-            int currentStockBalance = clientBalance.getOrDefault(request.getSymbol(), 0);
+            String requestSymbol = request.getSymbol();
+            int currentStockBalance = clientBalance.getOrDefault(requestSymbol, 0);
             StringBuilder responseMessage = new StringBuilder();
 
             if (!request.getBuy() && currentStockBalance < request.getNumberOfOffers()) {
                 responseObserver.onNext(AddOfferResult.newBuilder()
-					 .setMessage("Insufficient stocks to sell. You have " + currentStockBalance + " " + request.getSymbol() + " stocks").build());
+					 .setMessage("Insufficient stocks to sell. You have " + currentStockBalance + " " + requestSymbol + " stocks").build());
                 responseObserver.onCompleted();
                 return;
             }
-        	CopyOnWriteArrayList<Offer> offersList = stockOffersMap.get(stock);
+        	CopyOnWriteArrayList<Offer> offersList = stockSymbolOffersMap.get(requestSymbol);
             if (offersList == null) {
             	offersList = new CopyOnWriteArrayList<>();
             	offersList.add(request);
-                stockOffersMap.put(stock, offersList);
+            	stockSymbolOffersMap.put(requestSymbol, offersList);
                 responseObserver.onNext(AddOfferResult.newBuilder()
    					 .setMessage("DONE").build());
 	       		responseObserver.onCompleted();
                 return;
             }
             
-            CopyOnWriteArrayList<Offer> userOffers = stockOffersMap.values().stream()
+            CopyOnWriteArrayList<Offer> userOffers = stockSymbolOffersMap.values().stream()
                     .flatMap(List::stream)
-                    .filter(offer -> offer.getClientId().equals(request.getClientId()) && offer.getSymbol().equals(request.getSymbol()))
+                    .filter(offer -> offer.getClientId().equals(request.getClientId()) && offer.getSymbol().equals(requestSymbol))
                     .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
 
             for(Offer offer:userOffers) {
             	if(request.getBuy() == offer.getBuy()) {
-                	responseMessage.append("You already have an existing order for " + request.getSymbol() + " It will be replaced with your new order.");
+                	responseMessage.append("You already have an existing order for " + requestSymbol + " It will be replaced with your new order.");
                 	responseMessage.append("\n");
                 	offersList.remove(offer);
             	}
@@ -228,7 +228,7 @@ public class StocksServiceServer {
                             .setBuy(request.getBuy())
                             .setClientId(request.getClientId())
                             .setStockPrice(request.getStockPrice())
-                            .setSymbol(request.getSymbol())
+                            .setSymbol(requestSymbol)
                             .setNumberOfOffers(numberOfOffersRequest).build();
             		//update request with updated offer, put it in list and remove offer from list
             		if(request.getBuy()) {
@@ -291,13 +291,13 @@ public class StocksServiceServer {
                         .setBuy(request.getBuy())
                         .setClientId(request.getClientId())
                         .setStockPrice(request.getStockPrice())
-                        .setSymbol(request.getSymbol())
+                        .setSymbol(requestSymbol)
                         .setNumberOfOffers(numberOfOffersRequest).build();
 	            offersList.add(updatedRequest);
             }
-            stockOffersMap.put(stock, offersList);
+            stockSymbolOffersMap.put(requestSymbol, offersList);
             
-            clientBalance.put(request.getSymbol(), currentStockBalance);
+            clientBalance.put(requestSymbol, currentStockBalance);
             clientStockBalanceMap.put(request.getClientId(), clientBalance);
             responseMessage.append("DONE");
             
