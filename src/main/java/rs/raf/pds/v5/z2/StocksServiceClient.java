@@ -13,15 +13,19 @@ import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
-import rs.raf.pds.v5.z2.gRPC.StockArray;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class StocksServiceClient {
-
+    
     private static final Map<String, Stock> stockMap = new HashMap<String, Stock>();
     private static final Map<String, Integer> stockPostionMap = new HashMap<String, Integer>();
     public static void main(String[] args) throws IOException {
@@ -75,25 +79,6 @@ public class StocksServiceClient {
             stockMap.put(s.getSymbol(), s);
             ispisStock(s);
         }
-
-        StreamObserver<StockArray> responseObserverSubscribe = new StreamObserver<StockArray>() {
-            @Override
-            public void onNext(StockArray array) {
-            	if(array.getStocksCount() > 0) {
-            		ispisStockUpdate(array);
-            	}
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                System.err.println("Error occurred: " + throwable.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        };
         
         StreamObserver<Offer> responseObserverOffers = new StreamObserver<Offer>() {
             @Override
@@ -183,12 +168,46 @@ public class StocksServiceClient {
             }
         }
 
-        SubscribeUpit subscriptionRequest = SubscribeUpit.newBuilder().addAllSymbols(symbols).build();
+        SubscribeUpit subscriptionRequest = SubscribeUpit.newBuilder().addAllSymbols(symbols).setClientId(clientId).build();
 
         // Subscribe to the stocks
-        asyncStub.subscribeStocks(subscriptionRequest, responseObserverSubscribe);
+        asyncStub.subscribeStocks(subscriptionRequest, responseObserverEmpty);
         asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
         String command;
+        Runnable clientCode = () -> {
+            try (Socket tcpSocket = new Socket("localhost", 9090);
+                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(tcpSocket.getOutputStream()));
+                 ) {
+                System.out.println(clientId);
+                writer.write(clientId);
+                writer.newLine();
+                writer.flush();
+                ObjectInputStream inputStream = new ObjectInputStream(tcpSocket.getInputStream());
+                while (true) {
+
+                    System.out.println("clientId");
+                    Object obj = inputStream.readObject();
+                    System.out.println("clientId NIGGER");
+                    if (obj instanceof List<?>) {
+                        List<?> stockArray = (List<?>) obj;
+                        if (!stockArray.isEmpty() && stockArray.get(0) instanceof StockTCP) {
+                            @SuppressWarnings("unchecked")
+                            List<StockTCP> typedStockArray = (List<StockTCP>) stockArray;
+                            ispisStockUpdate(typedStockArray);
+                        }
+                    }
+                }
+            } catch (EOFException e) {
+                // Connection closed gracefully
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread clientThread = new Thread(clientCode);
+        clientThread.start();
+
+
         while (true) {
             System.out.print("Enter command (/exit to exit): ");
             command = reader.readLine().trim();
@@ -282,7 +301,7 @@ public class StocksServiceClient {
                         int month = Integer.parseInt(parts[3].trim());
                         int day = Integer.parseInt(parts[4].trim());
                         try {
-                        	LocalDateTime date = LocalDateTime.of(year, month, day, 23, 59, 59);
+                        	LocalDateTime.of(year, month, day, 23, 59, 59);
                             asyncStub.getTransactionHistory(
                             		TransactionHistoryRequest.newBuilder()
                             				.setSymbol(symbol)
@@ -308,7 +327,6 @@ public class StocksServiceClient {
                 System.out.println("Invalid command. Please try again.");
             }
         }
-
         channel.shutdown();
         reader.close();
     }
@@ -330,16 +348,18 @@ public class StocksServiceClient {
         					"Nr. Offers: " + sellOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", sellOffer.getStockPrice()));
     }
-    private static void ispisStockUpdate(StockArray stocks) {
-        System.out.print("\n");
+    private static void ispisStockUpdate(List<StockTCP> stocks) {
+        // Move the cursor to the top-left corner
+        //System.out.print(Ansi.ansi().cursor(1, 1));
+
         // Iterate through stocks to update the output map
-        for (Stock stock : stocks.getStocksList()) {
-            String symbol = stock.getSymbol();
+        for (StockTCP stock : stocks) {
+            String symbol = stock.symbol();
             StringBuilder outputBuilder = new StringBuilder();
             outputBuilder.append(symbol).append(" ")
-                    .append(String.format("%.2f", stock.getStartPrice())).append(" ");
+                    .append(String.format("%.2f", stock.startPrice())).append(" ");
 
-            double changeInPrice = stock.getChangeInPrice();
+            double changeInPrice = stock.changeInPrice();
             if (changeInPrice > 0) {
                 outputBuilder.append(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + "↑ \u2191").reset());
             } else if (changeInPrice < 0) {
@@ -351,9 +371,11 @@ public class StocksServiceClient {
             System.out.print("\n");
         }
 
-        for (int i = 0; i < stocks.getStocksCount() + 1; i++) {
+        // Move the cursor back to the top-left corner after printing
+        for (int i = 0; i < stocks.size() + 1; i++) {
             System.out.print(Ansi.ansi().cursorUpLine());
         }
     }
+
 
 }

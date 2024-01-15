@@ -126,28 +126,28 @@ public final class StocksServiceGrpc {
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @java.lang.Deprecated // Use {@link #getSubscribeStocksMethod()} instead. 
   public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
-      rs.raf.pds.v5.z2.gRPC.StockArray> METHOD_SUBSCRIBE_STOCKS = getSubscribeStocksMethod();
+      rs.raf.pds.v5.z2.gRPC.Empty> METHOD_SUBSCRIBE_STOCKS = getSubscribeStocksMethod();
 
   private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
-      rs.raf.pds.v5.z2.gRPC.StockArray> getSubscribeStocksMethod;
+      rs.raf.pds.v5.z2.gRPC.Empty> getSubscribeStocksMethod;
 
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
-      rs.raf.pds.v5.z2.gRPC.StockArray> getSubscribeStocksMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.StockArray> getSubscribeStocksMethod;
+      rs.raf.pds.v5.z2.gRPC.Empty> getSubscribeStocksMethod() {
+    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.Empty> getSubscribeStocksMethod;
     if ((getSubscribeStocksMethod = StocksServiceGrpc.getSubscribeStocksMethod) == null) {
       synchronized (StocksServiceGrpc.class) {
         if ((getSubscribeStocksMethod = StocksServiceGrpc.getSubscribeStocksMethod) == null) {
           StocksServiceGrpc.getSubscribeStocksMethod = getSubscribeStocksMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.StockArray>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.SubscribeUpit, rs.raf.pds.v5.z2.gRPC.Empty>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(
                   "StocksService", "SubscribeStocks"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   rs.raf.pds.v5.z2.gRPC.SubscribeUpit.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.StockArray.getDefaultInstance()))
+                  rs.raf.pds.v5.z2.gRPC.Empty.getDefaultInstance()))
                   .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("SubscribeStocks"))
                   .build();
           }
@@ -335,7 +335,7 @@ public final class StocksServiceGrpc {
     /**
      */
     public void subscribeStocks(rs.raf.pds.v5.z2.gRPC.SubscribeUpit request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.StockArray> responseObserver) {
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
       asyncUnimplementedUnaryCall(getSubscribeStocksMethod(), responseObserver);
     }
 
@@ -392,10 +392,10 @@ public final class StocksServiceGrpc {
                   this, METHODID_GET_ALL_STOCKS)))
           .addMethod(
             getSubscribeStocksMethod(),
-            asyncServerStreamingCall(
+            asyncUnaryCall(
               new MethodHandlers<
                 rs.raf.pds.v5.z2.gRPC.SubscribeUpit,
-                rs.raf.pds.v5.z2.gRPC.StockArray>(
+                rs.raf.pds.v5.z2.gRPC.Empty>(
                   this, METHODID_SUBSCRIBE_STOCKS)))
           .addMethod(
             getGetOffersMethod(),
@@ -474,8 +474,8 @@ public final class StocksServiceGrpc {
     /**
      */
     public void subscribeStocks(rs.raf.pds.v5.z2.gRPC.SubscribeUpit request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.StockArray> responseObserver) {
-      asyncServerStreamingCall(
+        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty> responseObserver) {
+      asyncUnaryCall(
           getChannel().newCall(getSubscribeStocksMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -554,9 +554,8 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.StockArray> subscribeStocks(
-        rs.raf.pds.v5.z2.gRPC.SubscribeUpit request) {
-      return blockingServerStreamingCall(
+    public rs.raf.pds.v5.z2.gRPC.Empty subscribeStocks(rs.raf.pds.v5.z2.gRPC.SubscribeUpit request) {
+      return blockingUnaryCall(
           getChannel(), getSubscribeStocksMethod(), getCallOptions(), request);
     }
 
@@ -628,6 +627,14 @@ public final class StocksServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.Empty> subscribeStocks(
+        rs.raf.pds.v5.z2.gRPC.SubscribeUpit request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSubscribeStocksMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<rs.raf.pds.v5.z2.gRPC.AddOfferResult> addOffer(
         rs.raf.pds.v5.z2.gRPC.Offer request) {
       return futureUnaryCall(
@@ -675,7 +682,7 @@ public final class StocksServiceGrpc {
           break;
         case METHODID_SUBSCRIBE_STOCKS:
           serviceImpl.subscribeStocks((rs.raf.pds.v5.z2.gRPC.SubscribeUpit) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.StockArray>) responseObserver);
+              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.Empty>) responseObserver);
           break;
         case METHODID_GET_OFFERS:
           serviceImpl.getOffers((rs.raf.pds.v5.z2.gRPC.AskBidRequest) request,

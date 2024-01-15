@@ -10,7 +10,7 @@ service StocksService {
 
 	rpc GetAllStocks(Empty) returns (stream Stock) {}
 
-	rpc SubscribeStocks(SubscribeUpit) returns (stream StockArray) {}
+	rpc SubscribeStocks(SubscribeUpit) returns (Empty) {}
 
 	rpc GetOffers(AskBidRequest) returns (stream Offer) {}
 
@@ -29,12 +29,9 @@ message Stock {
 	int64 dateUnix = 5;
 }
 
-message StockArray {
-	repeated Stock stocks = 1;
-}
-
 message SubscribeUpit {
     repeated string symbols = 1;
+    string clientId = 2;
 }
 
 message StockRequest {
