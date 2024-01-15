@@ -347,7 +347,7 @@ public class StocksServiceClient {
     private static void ispisStockUpdate(List<StockTCP> stocks) {
         // Move the cursor to the top-left corner
         //System.out.print(Ansi.ansi().cursor(1, 1));
-
+    	System.out.print("\n");
         // Iterate through stocks to update the output map
         for (StockTCP stock : stocks) {
             String symbol = stock.symbol();
