@@ -18,6 +18,7 @@ import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -57,32 +58,67 @@ public class StocksServiceServer {
                     System.out.println("I DONT KAPIRAM");
                     handleTCPClient(clientSocket);
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-
-        private void handleTCPClient(Socket clientSocket) throws InterruptedException {
+        
+        private void handleTCPClient(Socket clientSocket) {
             Thread clientHandlerThread = new Thread(() -> {
                 try {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     ObjectOutputStream writer = new ObjectOutputStream(clientSocket.getOutputStream());
-                    String clientId = null;
-                    clientId = reader.readLine();
-                    if(clientId != null) {
-                        clientMap.put(clientSocket, clientId);
+
+                    String clientId = reader.readLine();
+                    if (clientId != null) {
+                        synchronized (clientMap) {
+                            clientMap.put(clientSocket, clientId);
+                        }
                     }
-                    while(true) {
-                        sendUpdates(writer, clientSocket);
-                        Thread.sleep(4000);
+
+                    while (true) {
+                        try {
+                            sendUpdates(writer, clientSocket);
+                            Thread.sleep(4000);
+                        } catch (IOException e) {
+                            // Handle IOException, including SocketException
+                            handleClientDisconnect(clientSocket);
+                            break;
+                        } catch (InterruptedException e) {
+                            // Handle InterruptedException
+                            e.printStackTrace();
+                        }
                     }
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
             clientHandlerThread.start();
         }
 
+
+
+        
+        private void handleClientDisconnect(Socket clientSocket) {
+            try {
+                System.out.println("Client disconnected: " + clientSocket);
+                synchronized (clientMap) {
+                    clientMap.remove(clientSocket);
+                }
+                
+                clientSocket.close();
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
         private ConcurrentMap<String, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<String>>();
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
@@ -420,7 +456,7 @@ public class StocksServiceServer {
             }
         }
         
-        private void sendUpdates(ObjectOutputStream writer, Socket clientSocket) {
+        private void sendUpdates(ObjectOutputStream writer, Socket clientSocket) throws IOException {
         	//System.out.println(clientStockBalanceMap);
         	//System.out.println(stockOffersMap);
         	//System.out.println(dateTransactionHistoryMap);
@@ -434,14 +470,9 @@ public class StocksServiceServer {
             		StockTCP s = new StockTCP(stock.getSymbol(), stock.getCompanyName(), stock.getStartPrice(), stock.getChangeInPrice(), stock.getDateUnix());
             		a1.add(s);
             	}
-                try {
-					writer.writeObject(a1);
-                    writer.flush();
-                    writer.reset();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				writer.writeObject(a1);
+                writer.flush();
+                writer.reset();
             }
         }
     }
