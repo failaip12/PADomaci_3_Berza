@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 public class StocksServiceServer {
     private static final String DATA_FILE_PATH = "transactionHistory.txt";
     private static final String BACKUP_FILE_PATH = "transactionHistoryBackup.txt";
-    private static ConcurrentMap<String, Socket> clientMap = new ConcurrentHashMap<String, Socket>();
+    private static ConcurrentMap<Socket, String> clientMap = new ConcurrentHashMap<Socket, String>();
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = ServerBuilder
                 .forPort(8090)
@@ -62,31 +62,27 @@ public class StocksServiceServer {
             }
         });
 
-        private void handleTCPClient(Socket clientSocket) {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                ObjectOutputStream writer = new ObjectOutputStream(clientSocket.getOutputStream());
-                System.out.println("clientSocket.toString()");
-                String clientId = null;
-                System.out.println(clientSocket.toString());
-                if(!clientMap.containsValue(clientSocket)) {
+        private void handleTCPClient(Socket clientSocket) throws InterruptedException {
+            Thread clientHandlerThread = new Thread(() -> {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    ObjectOutputStream writer = new ObjectOutputStream(clientSocket.getOutputStream());
+                    String clientId = null;
                     clientId = reader.readLine();
+                    if(clientId != null) {
+                        clientMap.put(clientSocket, clientId);
+                    }
+                    while(true) {
+                        sendUpdates(writer, clientSocket);
+                        Thread.sleep(4000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                System.out.println(clientId);
-                if(clientId != null) {
-    	            clientMap.put(clientId, clientSocket);
-    	            clientSocket.setKeepAlive(true);
-                	while(true) {
-	    	            sendUpdates(writer);
-                	}
-                }
-                else {
-                	System.out.println("I HATE SOCKETS");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            });
+            clientHandlerThread.start();
         }
+
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
         private ConcurrentMap<String, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<String>>();
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
@@ -424,31 +420,28 @@ public class StocksServiceServer {
             }
         }
         
-        private void sendUpdates(ObjectOutputStream writer) {
+        private void sendUpdates(ObjectOutputStream writer, Socket clientSocket) {
         	//System.out.println(clientStockBalanceMap);
         	//System.out.println(stockOffersMap);
         	//System.out.println(dateTransactionHistoryMap);
-        	System.out.println(subscriptions);
-            for (Map.Entry<String, Socket> entry : clientMap.entrySet()) {
-                String clientId = entry.getKey();
-            	List<String> symbols = subscriptions.get(clientId);
-            	if(symbols!=null) {
-                	Collections.sort(symbols);
-                	List<StockTCP> a1 = new ArrayList<StockTCP>();
-                	for (String symbol:symbols) {
-                		Stock stock = symbolStockMap.get(symbol);
-                		StockTCP s = new StockTCP(stock.getSymbol(), stock.getCompanyName(), stock.getStartPrice(), stock.getChangeInPrice(), stock.getDateUnix());
-                		a1.add(s);
-                	}
-                    try {
-						writer.writeObject(a1);
-	                    writer.flush();
-	                    writer.reset();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-                }
+        	String clientId = clientMap.get(clientSocket);            	
+        	List<String> symbols = subscriptions.get(clientId);
+        	if(symbols!=null) {
+            	Collections.sort(symbols);
+            	List<StockTCP> a1 = new ArrayList<StockTCP>();
+            	for (String symbol:symbols) {
+            		Stock stock = symbolStockMap.get(symbol);
+            		StockTCP s = new StockTCP(stock.getSymbol(), stock.getCompanyName(), stock.getStartPrice(), stock.getChangeInPrice(), stock.getDateUnix());
+            		a1.add(s);
+            	}
+                try {
+					writer.writeObject(a1);
+                    writer.flush();
+                    writer.reset();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         }
     }

@@ -178,16 +178,12 @@ public class StocksServiceClient {
             try (Socket tcpSocket = new Socket("localhost", 9090);
                  BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(tcpSocket.getOutputStream()));
                  ) {
-                System.out.println(clientId);
                 writer.write(clientId);
                 writer.newLine();
                 writer.flush();
                 ObjectInputStream inputStream = new ObjectInputStream(tcpSocket.getInputStream());
                 while (true) {
-
-                    System.out.println("clientId");
                     Object obj = inputStream.readObject();
-                    System.out.println("clientId NIGGER");
                     if (obj instanceof List<?>) {
                         List<?> stockArray = (List<?>) obj;
                         if (!stockArray.isEmpty() && stockArray.get(0) instanceof StockTCP) {
