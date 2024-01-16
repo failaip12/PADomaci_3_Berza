@@ -6,21 +6,23 @@ import io.grpc.stub.StreamObserver;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
-import rs.raf.pds.v5.z2.gRPC.StockArray;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
 import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc.StocksServiceImplBase;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
-import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
+//import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 
 import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -34,33 +36,107 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.apache.commons.math3.util.Precision;
+
 public class StocksServiceServer {
     private static final String DATA_FILE_PATH = "transactionHistory.txt";
     private static final String BACKUP_FILE_PATH = "transactionHistoryBackup.txt";
-
     public static void main(String[] args) throws IOException, InterruptedException {
         Server server = ServerBuilder
                 .forPort(8090)
                 .addService(new StocksServiceImpl())
                 .build();
-
         server.start();
         server.awaitTermination();
     }
-
     static class StocksServiceImpl extends StocksServiceImplBase {
+
+        private ConcurrentMap<Socket, String> socketIDMap = new ConcurrentHashMap<Socket, String>();
+        private ConcurrentMap<String, Socket> idSocketMap = new ConcurrentHashMap<String, Socket>();
+        private ConcurrentMap<Socket, ObjectOutputStream> socketWriterMap = new ConcurrentHashMap<Socket, ObjectOutputStream>();
+        
+        Thread tcpThread = new Thread(() -> {
+            try (ServerSocket serverSocket = new ServerSocket(9090)) {
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("I DONT KAPIRAM");
+                    handleTCPClient(clientSocket);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        
+        private void handleTCPClient(Socket clientSocket) {
+            Thread clientHandlerThread = new Thread(() -> {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    ObjectOutputStream writer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+                    String clientId = reader.readLine();
+                    if (clientId != null) {
+                        synchronized (socketIDMap) {
+                            socketIDMap.put(clientSocket, clientId);
+                            idSocketMap.put(clientId, clientSocket);
+                            socketWriterMap.put(clientSocket, writer);
+                        }
+                    }
+
+                    while (true) {
+                        try {
+                            sendUpdates(writer, clientSocket);
+                            Thread.sleep(4000);
+                        } catch (IOException e) {
+                            // Handle IOException, including SocketException
+                            handleClientDisconnect(clientSocket);
+                            break;
+                        } catch (InterruptedException e) {
+                            // Handle InterruptedException
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        clientSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            clientHandlerThread.start();
+        }
+        
+        private void handleClientDisconnect(Socket clientSocket) {
+            try {
+                System.out.println("Client disconnected: " + clientSocket);
+                synchronized (socketIDMap) {
+                    socketIDMap.remove(clientSocket);
+                }
+                
+                clientSocket.close();
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        
         private ConcurrentMap<String, Stock> symbolStockMap = new ConcurrentHashMap<String, Stock>();
-        private ConcurrentMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<StreamObserver<StockArray>, CopyOnWriteArrayList<String>>();
+        private ConcurrentMap<String, CopyOnWriteArrayList<String>> subscriptions = new ConcurrentHashMap<String, CopyOnWriteArrayList<String>>();
         private ConcurrentMap<String, ConcurrentMap<String, Integer>> clientStockBalanceMap = new ConcurrentHashMap<String, ConcurrentMap<String, Integer>>();
         private ConcurrentMap<String, CopyOnWriteArrayList<Offer>> stockSymbolOffersMap = new ConcurrentHashMap<String, CopyOnWriteArrayList<Offer>>();
-        private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
+        //private ConcurrentMap<String, StreamObserver<TransactionNotification>> idTransObserverMap = new ConcurrentHashMap<String, StreamObserver<TransactionNotification>>();
         private ConcurrentMap<Instant, CopyOnWriteArrayList<TransactionHistory>> dateTransactionHistoryMap = new ConcurrentHashMap<Instant, CopyOnWriteArrayList<TransactionHistory>>();
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
             initUnos();
+
+            tcpThread.start();
             executorService.scheduleAtFixedRate(this::saveTransactionHistory, 0, 1, TimeUnit.MINUTES);
-            executorService.scheduleAtFixedRate(this::sendUpdates, 0, 5, TimeUnit.SECONDS);
+            //executorService.scheduleAtFixedRate(this::sendUpdates, 0, 5, TimeUnit.SECONDS);
         }
 
         private void initUnos() {
@@ -86,12 +162,12 @@ public class StocksServiceServer {
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         }
-        
+        /*
         @Override
         public void subToTransactions(ClientId request, StreamObserver<TransactionNotification> responseObserver) {
         	idTransObserverMap.put(request.getClientId(), responseObserver);
         }
-        
+        */
         @Override
         public void getAllStocks(Empty request, StreamObserver<Stock> responseObserver) {
             for (Stock stock : symbolStockMap.values()) {
@@ -119,12 +195,12 @@ public class StocksServiceServer {
         }
         
         @Override
-        public void subscribeStocks(SubscribeUpit request, StreamObserver<StockArray> responseObserver) {
+        public void subscribeStocks(SubscribeUpit request, StreamObserver<Empty> responseObserver) {
         	CopyOnWriteArrayList<String> temp = new CopyOnWriteArrayList<String>();
             for (String symbol : request.getSymbolsList()) {
             	temp.add(symbol);
             }
-        	subscriptions.put(responseObserver, temp);
+        	subscriptions.put(request.getClientId(), temp);
         }
         
         @Override
@@ -174,14 +250,13 @@ public class StocksServiceServer {
 
             for(Offer offer:userOffers) {
             	if(request.getBuy() == offer.getBuy()) {
-                	responseMessage.append("You already have an existing order for " + requestSymbol + " It will be replaced with your new order.");
-                	responseMessage.append("\n");
+                	responseMessage.append("You already have an existing order for " + requestSymbol + " It will be replaced with your new order." + "\n");
                 	offersList.remove(offer);
             	}
             }
             
             List<Offer> offers = offersList.stream()
-                    .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()))
+                    .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && Precision.equals(offer.getStockPrice(), request.getStockPrice(), 0.01)))
                     .collect(Collectors.toList());
     		int numberOfOffersRequest = request.getNumberOfOffers();
             for (Offer offer:offers) {
@@ -307,13 +382,8 @@ public class StocksServiceServer {
         }
         
         private void notifyTransaction(Offer buyOffer, Offer sellOffer) {
-        	int test = 0;
-        	if(buyOffer.getNumberOfOffers() > sellOffer.getNumberOfOffers()) {
-        		test = sellOffer.getNumberOfOffers();
-        	}
-        	else {
-        		test = buyOffer.getNumberOfOffers();
-        	}
+        	int nrOfStocksTraded = Math.min(buyOffer.getNumberOfOffers(), sellOffer.getNumberOfOffers());
+        	/*
         	TransactionNotification transactionNotificationBuyer = TransactionNotification.newBuilder()
                     .setClientId(buyOffer.getClientId())
                     .setSymbol(buyOffer.getSymbol())
@@ -329,29 +399,72 @@ public class StocksServiceServer {
                     .setNumberOfShares(test)
                     .setBuy(false)
                     .build();
+        	*/
+            //StreamObserver<TransactionNotification> buyerObserver = idTransObserverMap.get(buyOffer.getClientId());
+            //StreamObserver<TransactionNotification> sellerObserver = idTransObserverMap.get(sellOffer.getClientId());
         	
-            StreamObserver<TransactionNotification> buyerObserver = idTransObserverMap.get(buyOffer.getClientId());
-            StreamObserver<TransactionNotification> sellerObserver = idTransObserverMap.get(sellOffer.getClientId());
-
-            // Notify the buyers and sellers
+        	
+        	TransactionNotification transactionNotificationSeller = new TransactionNotification(sellOffer.getSymbol(), sellOffer.getStockPrice(), nrOfStocksTraded, false);
+        	
+            ObjectOutputStream writerSeller = socketWriterMap.get(idSocketMap.get(sellOffer.getClientId()));
+        	try {
+				writerSeller.writeObject(transactionNotificationSeller);
+	        	writerSeller.flush();
+	        	writerSeller.reset();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+        	TransactionNotification transactionNotificationBuyer = new TransactionNotification(buyOffer.getSymbol(), buyOffer.getStockPrice(), nrOfStocksTraded, true);
+        	
+            ObjectOutputStream writerBuyer = socketWriterMap.get(idSocketMap.get(buyOffer.getClientId()));
+        	try {
+        		writerBuyer.writeObject(transactionNotificationBuyer);
+        		writerBuyer.flush();
+        		writerBuyer.reset();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+            /*
             if (buyerObserver != null) {
             	buyerObserver.onNext(transactionNotificationBuyer);
             }
             if (sellerObserver != null) {
             	sellerObserver.onNext(transactionNotificationSeller);
             }
+            */
             Instant currentTime = Instant.now();
         	TransactionHistory transactionHistory = TransactionHistory.newBuilder()
                     .setClientIdSeller(sellOffer.getClientId())
                     .setClientIdBuyer(buyOffer.getClientId())
                     .setSymbol(sellOffer.getSymbol())
                     .setPrice(sellOffer.getStockPrice())
-                    .setNumberOfShares(test)
+                    .setNumberOfShares(nrOfStocksTraded)
                     .setDateUnix(currentTime.toEpochMilli())
                     .build();
         	Instant transactionDate = truncateToDay(currentTime);
 
         	dateTransactionHistoryMap.computeIfAbsent(transactionDate, k -> new CopyOnWriteArrayList<>()).add(transactionHistory);
+        	Stock stock = symbolStockMap.get(sellOffer.getSymbol());
+        	double priceChangePercentage = generateRandomPercentage(nrOfStocksTraded);
+        	double newPrice = stock.getStartPrice() * (1 + priceChangePercentage);
+        	Stock updatedStock = Stock.newBuilder(stock.toBuilder()
+        			.setStartPrice(newPrice)
+        			.setChangeInPrice(newPrice - stock.getStartPrice()).build())
+        			.build();
+
+            symbolStockMap.put(sellOffer.getSymbol(), updatedStock);
+        }
+        
+        private double generateRandomPercentage(int numberOfStocksTraded) {
+            Random random = new Random();
+            double basePercentageChange = 0.02;
+            double maxAdditionalPercentageChange = numberOfStocksTraded/1000;
+
+            return basePercentageChange + (maxAdditionalPercentageChange * random.nextDouble());
         }
         
         private Instant truncateToDay(Instant instant) {
@@ -384,20 +497,23 @@ public class StocksServiceServer {
             }
         }
         
-        private void sendUpdates() {
+        private void sendUpdates(ObjectOutputStream writer, Socket clientSocket) throws IOException {
         	//System.out.println(clientStockBalanceMap);
         	//System.out.println(stockOffersMap);
         	//System.out.println(dateTransactionHistoryMap);
-            for (StreamObserver<StockArray> observer : subscriptions.keySet()) {
-            	List<String> symbols = subscriptions.get(observer);
+        	String clientId = socketIDMap.get(clientSocket);            	
+        	List<String> symbols = subscriptions.get(clientId);
+        	if(symbols!=null) {
             	Collections.sort(symbols);
-            	List<Stock> a1 = new ArrayList<Stock>();
+            	List<StockTCP> a1 = new ArrayList<StockTCP>();
             	for (String symbol:symbols) {
-            		a1.add(symbolStockMap.get(symbol));
+            		Stock stock = symbolStockMap.get(symbol);
+            		StockTCP s = new StockTCP(stock.getSymbol(), stock.getCompanyName(), stock.getStartPrice(), stock.getChangeInPrice(), stock.getDateUnix());
+            		a1.add(s);
             	}
-            	StockArray a = StockArray.newBuilder()
-            			.addAllStocks(a1).build();
-                observer.onNext(a);
+				writer.writeObject(a1);
+                writer.flush();
+                writer.reset();
             }
         }
     }

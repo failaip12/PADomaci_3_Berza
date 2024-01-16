@@ -31,4 +31,16 @@ public interface SubscribeUpitOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSymbolsBytes(int index);
+
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The clientId.
+   */
+  java.lang.String getClientId();
+  /**
+   * <code>string clientId = 2;</code>
+   * @return The bytes for clientId.
+   */
+  com.google.protobuf.ByteString
+      getClientIdBytes();
 }

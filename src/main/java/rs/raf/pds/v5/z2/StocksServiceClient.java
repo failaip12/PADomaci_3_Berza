@@ -8,20 +8,23 @@ import org.fusesource.jansi.Ansi;
 
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
-import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
 import rs.raf.pds.v5.z2.gRPC.Stock;
-import rs.raf.pds.v5.z2.gRPC.StockArray;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
-import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
+//import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,17 +32,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class StocksServiceClient {
-
+    
     private static final Map<String, Stock> stockMap = new HashMap<String, Stock>();
     private static final Map<String, Integer> stockPostionMap = new HashMap<String, Integer>();
+    private static final Random random = new Random();
     public static void main(String[] args) throws IOException {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090)
                 .usePlaintext()
                 .build();
 
-        
+        /*
         StreamObserver<TransactionNotification> transactionNotificationObserver = new StreamObserver<TransactionNotification>() {
             @Override
             public void onNext(TransactionNotification transactionNotification) {
@@ -64,7 +69,7 @@ public class StocksServiceClient {
                 // Handle completion if needed
             }
         };
-        
+        */
         StocksServiceGrpc.StocksServiceBlockingStub blockingStub = StocksServiceGrpc.newBlockingStub(channel);
         StocksServiceGrpc.StocksServiceStub asyncStub = StocksServiceGrpc.newStub(channel);
         Empty emptyRequest = Empty.newBuilder().build();
@@ -75,25 +80,6 @@ public class StocksServiceClient {
             stockMap.put(s.getSymbol(), s);
             ispisStock(s);
         }
-
-        StreamObserver<StockArray> responseObserverSubscribe = new StreamObserver<StockArray>() {
-            @Override
-            public void onNext(StockArray array) {
-            	if(array.getStocksCount() > 0) {
-            		ispisStockUpdate(array);
-            	}
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                System.err.println("Error occurred: " + throwable.getMessage());
-            }
-
-            @Override
-            public void onCompleted() {
-
-            }
-        };
         
         StreamObserver<Offer> responseObserverOffers = new StreamObserver<Offer>() {
             @Override
@@ -151,10 +137,12 @@ public class StocksServiceClient {
             }
         };
         
+
+
         StreamObserver<AddOfferResult> responseObserverAddOfferResult = new StreamObserver<AddOfferResult>() {
             @Override
             public void onNext(AddOfferResult result) {
-            	System.err.println(result);
+            	System.out.println(result);
             }
 
             @Override
@@ -183,17 +171,53 @@ public class StocksServiceClient {
             }
         }
 
-        SubscribeUpit subscriptionRequest = SubscribeUpit.newBuilder().addAllSymbols(symbols).build();
+        SubscribeUpit subscriptionRequest = SubscribeUpit.newBuilder().addAllSymbols(symbols).setClientId(clientId).build();
 
         // Subscribe to the stocks
-        asyncStub.subscribeStocks(subscriptionRequest, responseObserverSubscribe);
-        asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
+        asyncStub.subscribeStocks(subscriptionRequest, responseObserverEmpty);
+        //asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
         String command;
+        Runnable clientCode = () -> {
+            try (Socket tcpSocket = new Socket("localhost", 9090);
+                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(tcpSocket.getOutputStream()));
+                 ) {
+                writer.write(clientId);
+                writer.newLine();
+                writer.flush();
+                ObjectInputStream inputStream = new ObjectInputStream(tcpSocket.getInputStream());
+                while (true) {
+                    Object obj = inputStream.readObject();
+                    if (obj instanceof List<?>) {
+                        List<?> stockArray = (List<?>) obj;
+                        if (!stockArray.isEmpty() && stockArray.get(0) instanceof StockTCP) {
+                            @SuppressWarnings("unchecked")
+                            List<StockTCP> typedStockArray = (List<StockTCP>) stockArray;
+                            ispisStockUpdate(typedStockArray);
+                        }
+                    }
+                    else if(obj instanceof TransactionNotification) {
+                    	ispisTransactionNotification((TransactionNotification) obj);
+                    }
+                }
+            } catch (EOFException e) {
+                // Connection closed gracefully
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread clientThread = new Thread(clientCode);
+        clientThread.start();
+        
+        boolean automatic = false;
         while (true) {
             System.out.print("Enter command (/exit to exit): ");
             command = reader.readLine().trim();
             
             if ("/exit".equalsIgnoreCase(command)) {
+                break;
+            } else if ("/automatic".equalsIgnoreCase(command)) {
+            	automatic = true;
                 break;
             } else if (command.startsWith("/buyOffer")) {
             	String[] parts = command.split("\\s+", 4);
@@ -282,7 +306,7 @@ public class StocksServiceClient {
                         int month = Integer.parseInt(parts[3].trim());
                         int day = Integer.parseInt(parts[4].trim());
                         try {
-                        	LocalDateTime date = LocalDateTime.of(year, month, day, 23, 59, 59);
+                        	LocalDateTime.of(year, month, day, 23, 59, 59);
                             asyncStub.getTransactionHistory(
                             		TransactionHistoryRequest.newBuilder()
                             				.setSymbol(symbol)
@@ -308,11 +332,44 @@ public class StocksServiceClient {
                 System.out.println("Invalid command. Please try again.");
             }
         }
+        if(automatic) {
+        	List<String> all_symbols = new ArrayList<String>(stockMap.keySet());
 
+        	while(true) {
+                String randomSymbol = all_symbols.get(random.nextInt(all_symbols.size()));
+                boolean isBuy = random.nextBoolean();
+                double randomPrice = generateRandomPrice(stockMap.get(randomSymbol).getStartPrice());
+                int numberOfOffers = random.nextInt(10) + 1;
+
+                // Create and send a random buy/sell offer
+                asyncStub.addOffer(Offer.newBuilder()
+                        .setSymbol(randomSymbol)
+                        .setStockPrice(randomPrice)
+                        .setNumberOfOffers(numberOfOffers)
+                        .setBuy(isBuy)
+                        .setClientId(clientId)
+                        .build(), responseObserverAddOfferResult);
+        		try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        }
         channel.shutdown();
         reader.close();
     }
+    
 
+    
+    private static double generateRandomPrice(double realPrice) {
+        // Generate a random price close to the real price (you can adjust the range as needed)
+        double deviation = random.nextDouble() * 5.0; // Adjust the range as needed
+        boolean positiveDeviation = random.nextBoolean();
+        return positiveDeviation ? realPrice + deviation : realPrice - deviation;
+    }
+    
     private static void ispisStock(Stock stock) {
         System.out.println(stock.getSymbol() + " " +
                 String.format("%.2f", stock.getStartPrice()) + " " +
@@ -330,16 +387,31 @@ public class StocksServiceClient {
         					"Nr. Offers: " + sellOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", sellOffer.getStockPrice()));
     }
-    private static void ispisStockUpdate(StockArray stocks) {
-        System.out.print("\n");
+    
+    private static void ispisTransactionNotification(TransactionNotification transactionNotification) {
+        System.out.println("Transaction Notification:");
+        if(transactionNotification.buy()) {
+        	System.out.println("BUY: ");
+        } else {
+        	System.out.println("SELL: ");
+        }
+        System.out.println("Symbol: " + transactionNotification.symbol());
+        System.out.println("Price: " + transactionNotification.price());
+        System.out.println("Number of Shares: " + transactionNotification.numberOfShares());
+    }
+    
+    private static void ispisStockUpdate(List<StockTCP> stocks) {
+        // Move the cursor to the top-left corner
+        //System.out.print(Ansi.ansi().cursor(1, 1));
+    	System.out.print("\n");
         // Iterate through stocks to update the output map
-        for (Stock stock : stocks.getStocksList()) {
-            String symbol = stock.getSymbol();
+        for (StockTCP stock : stocks) {
+            String symbol = stock.symbol();
             StringBuilder outputBuilder = new StringBuilder();
             outputBuilder.append(symbol).append(" ")
-                    .append(String.format("%.2f", stock.getStartPrice())).append(" ");
+                    .append(String.format("%.2f", stock.startPrice())).append(" ");
 
-            double changeInPrice = stock.getChangeInPrice();
+            double changeInPrice = stock.changeInPrice();
             if (changeInPrice > 0) {
                 outputBuilder.append(Ansi.ansi().fgGreen().a("+" + String.format("%.2f", changeInPrice) + "↑ \u2191").reset());
             } else if (changeInPrice < 0) {
@@ -349,11 +421,20 @@ public class StocksServiceClient {
             }
             System.out.print(outputBuilder.toString());
             System.out.print("\n");
+            Stock s = Stock.newBuilder()
+            		.setSymbol(symbol)
+            		.setStartPrice(stock.startPrice())
+            		.setChangeInPrice(changeInPrice)
+            		.setCompanyName(symbol)
+            		.setDateUnix(stock.dateUnix())
+            		.build();
+            stockMap.put(symbol, s);
         }
 
-        for (int i = 0; i < stocks.getStocksCount() + 1; i++) {
+        // Move the cursor back to the top-left corner after printing
+        for (int i = 0; i < stocks.size() + 1; i++) {
             System.out.print(Ansi.ansi().cursorUpLine());
         }
     }
-
+    
 }
