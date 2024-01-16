@@ -220,38 +220,6 @@ public final class StocksServiceGrpc {
      return getAddOfferMethod;
   }
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getSubToTransactionsMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.ClientId,
-      rs.raf.pds.v5.z2.gRPC.TransactionNotification> METHOD_SUB_TO_TRANSACTIONS = getSubToTransactionsMethod();
-
-  private static volatile io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.ClientId,
-      rs.raf.pds.v5.z2.gRPC.TransactionNotification> getSubToTransactionsMethod;
-
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.ClientId,
-      rs.raf.pds.v5.z2.gRPC.TransactionNotification> getSubToTransactionsMethod() {
-    io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.ClientId, rs.raf.pds.v5.z2.gRPC.TransactionNotification> getSubToTransactionsMethod;
-    if ((getSubToTransactionsMethod = StocksServiceGrpc.getSubToTransactionsMethod) == null) {
-      synchronized (StocksServiceGrpc.class) {
-        if ((getSubToTransactionsMethod = StocksServiceGrpc.getSubToTransactionsMethod) == null) {
-          StocksServiceGrpc.getSubToTransactionsMethod = getSubToTransactionsMethod = 
-              io.grpc.MethodDescriptor.<rs.raf.pds.v5.z2.gRPC.ClientId, rs.raf.pds.v5.z2.gRPC.TransactionNotification>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "StocksService", "SubToTransactions"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.ClientId.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  rs.raf.pds.v5.z2.gRPC.TransactionNotification.getDefaultInstance()))
-                  .setSchemaDescriptor(new StocksServiceMethodDescriptorSupplier("SubToTransactions"))
-                  .build();
-          }
-        }
-     }
-     return getSubToTransactionsMethod;
-  }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   @java.lang.Deprecated // Use {@link #getGetTransactionHistoryMethod()} instead. 
   public static final io.grpc.MethodDescriptor<rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest,
       rs.raf.pds.v5.z2.gRPC.TransactionHistory> METHOD_GET_TRANSACTION_HISTORY = getGetTransactionHistoryMethod();
@@ -355,13 +323,6 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public void subToTransactions(rs.raf.pds.v5.z2.gRPC.ClientId request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.TransactionNotification> responseObserver) {
-      asyncUnimplementedUnaryCall(getSubToTransactionsMethod(), responseObserver);
-    }
-
-    /**
-     */
     public void getTransactionHistory(rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest request,
         io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.TransactionHistory> responseObserver) {
       asyncUnimplementedUnaryCall(getGetTransactionHistoryMethod(), responseObserver);
@@ -411,13 +372,6 @@ public final class StocksServiceGrpc {
                 rs.raf.pds.v5.z2.gRPC.Offer,
                 rs.raf.pds.v5.z2.gRPC.AddOfferResult>(
                   this, METHODID_ADD_OFFER)))
-          .addMethod(
-            getSubToTransactionsMethod(),
-            asyncServerStreamingCall(
-              new MethodHandlers<
-                rs.raf.pds.v5.z2.gRPC.ClientId,
-                rs.raf.pds.v5.z2.gRPC.TransactionNotification>(
-                  this, METHODID_SUB_TO_TRANSACTIONS)))
           .addMethod(
             getGetTransactionHistoryMethod(),
             asyncServerStreamingCall(
@@ -497,14 +451,6 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public void subToTransactions(rs.raf.pds.v5.z2.gRPC.ClientId request,
-        io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.TransactionNotification> responseObserver) {
-      asyncServerStreamingCall(
-          getChannel().newCall(getSubToTransactionsMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
     public void getTransactionHistory(rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest request,
         io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.TransactionHistory> responseObserver) {
       asyncServerStreamingCall(
@@ -576,14 +522,6 @@ public final class StocksServiceGrpc {
 
     /**
      */
-    public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.TransactionNotification> subToTransactions(
-        rs.raf.pds.v5.z2.gRPC.ClientId request) {
-      return blockingServerStreamingCall(
-          getChannel(), getSubToTransactionsMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
     public java.util.Iterator<rs.raf.pds.v5.z2.gRPC.TransactionHistory> getTransactionHistory(
         rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest request) {
       return blockingServerStreamingCall(
@@ -648,8 +586,7 @@ public final class StocksServiceGrpc {
   private static final int METHODID_SUBSCRIBE_STOCKS = 3;
   private static final int METHODID_GET_OFFERS = 4;
   private static final int METHODID_ADD_OFFER = 5;
-  private static final int METHODID_SUB_TO_TRANSACTIONS = 6;
-  private static final int METHODID_GET_TRANSACTION_HISTORY = 7;
+  private static final int METHODID_GET_TRANSACTION_HISTORY = 6;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -691,10 +628,6 @@ public final class StocksServiceGrpc {
         case METHODID_ADD_OFFER:
           serviceImpl.addOffer((rs.raf.pds.v5.z2.gRPC.Offer) request,
               (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.AddOfferResult>) responseObserver);
-          break;
-        case METHODID_SUB_TO_TRANSACTIONS:
-          serviceImpl.subToTransactions((rs.raf.pds.v5.z2.gRPC.ClientId) request,
-              (io.grpc.stub.StreamObserver<rs.raf.pds.v5.z2.gRPC.TransactionNotification>) responseObserver);
           break;
         case METHODID_GET_TRANSACTION_HISTORY:
           serviceImpl.getTransactionHistory((rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest) request,
@@ -767,7 +700,6 @@ public final class StocksServiceGrpc {
               .addMethod(getSubscribeStocksMethod())
               .addMethod(getGetOffersMethod())
               .addMethod(getAddOfferMethod())
-              .addMethod(getSubToTransactionsMethod())
               .addMethod(getGetTransactionHistoryMethod())
               .build();
         }

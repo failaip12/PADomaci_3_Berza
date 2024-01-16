@@ -4,6 +4,17 @@
 package rs.raf.pds.v5.z2.gRPC;
 
 /**
+ * <pre>
+ *
+ *message TransactionNotification {
+ *string clientId = 1;
+ *string symbol = 2;
+ *double price = 3;
+ *int32 numberOfShares = 4;
+ *bool buy = 5;
+ *}
+ * </pre>
+ *
  * Protobuf type {@code TransactionHistory}
  */
 public final class TransactionHistory extends
@@ -402,6 +413,17 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   *
+   *message TransactionNotification {
+   *string clientId = 1;
+   *string symbol = 2;
+   *double price = 3;
+   *int32 numberOfShares = 4;
+   *bool buy = 5;
+   *}
+   * </pre>
+   *
    * Protobuf type {@code TransactionHistory}
    */
   public static final class Builder extends

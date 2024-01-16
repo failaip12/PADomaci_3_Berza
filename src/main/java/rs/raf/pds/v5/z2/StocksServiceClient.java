@@ -8,7 +8,6 @@ import org.fusesource.jansi.Ansi;
 
 import rs.raf.pds.v5.z2.gRPC.AddOfferResult;
 import rs.raf.pds.v5.z2.gRPC.AskBidRequest;
-import rs.raf.pds.v5.z2.gRPC.ClientId;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistoryRequest;
 import rs.raf.pds.v5.z2.gRPC.Empty;
 import rs.raf.pds.v5.z2.gRPC.Offer;
@@ -16,7 +15,7 @@ import rs.raf.pds.v5.z2.gRPC.Stock;
 import rs.raf.pds.v5.z2.gRPC.StocksServiceGrpc;
 import rs.raf.pds.v5.z2.gRPC.SubscribeUpit;
 import rs.raf.pds.v5.z2.gRPC.TransactionHistory;
-import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
+//import rs.raf.pds.v5.z2.gRPC.TransactionNotification;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -43,7 +42,7 @@ public class StocksServiceClient {
                 .usePlaintext()
                 .build();
 
-        
+        /*
         StreamObserver<TransactionNotification> transactionNotificationObserver = new StreamObserver<TransactionNotification>() {
             @Override
             public void onNext(TransactionNotification transactionNotification) {
@@ -68,7 +67,7 @@ public class StocksServiceClient {
                 // Handle completion if needed
             }
         };
-        
+        */
         StocksServiceGrpc.StocksServiceBlockingStub blockingStub = StocksServiceGrpc.newBlockingStub(channel);
         StocksServiceGrpc.StocksServiceStub asyncStub = StocksServiceGrpc.newStub(channel);
         Empty emptyRequest = Empty.newBuilder().build();
@@ -172,7 +171,7 @@ public class StocksServiceClient {
 
         // Subscribe to the stocks
         asyncStub.subscribeStocks(subscriptionRequest, responseObserverEmpty);
-        asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
+        //asyncStub.subToTransactions(ClientId.newBuilder().setClientId(clientId).build(), transactionNotificationObserver);
         String command;
         Runnable clientCode = () -> {
             try (Socket tcpSocket = new Socket("localhost", 9090);
@@ -191,6 +190,9 @@ public class StocksServiceClient {
                             List<StockTCP> typedStockArray = (List<StockTCP>) stockArray;
                             ispisStockUpdate(typedStockArray);
                         }
+                    }
+                    else if(obj instanceof TransactionNotification) {
+                    	ispisTransactionNotification((TransactionNotification) obj);
                     }
                 }
             } catch (EOFException e) {
@@ -344,6 +346,19 @@ public class StocksServiceClient {
         					"Nr. Offers: " + sellOffer.getNumberOfOffers() + " " +
                 String.format("%.2f", sellOffer.getStockPrice()));
     }
+    
+    private static void ispisTransactionNotification(TransactionNotification transactionNotification) {
+        System.out.println("Transaction Notification:");
+        if(transactionNotification.buy()) {
+        	System.out.println("BUY: ");
+        } else {
+        	System.out.println("SELL: ");
+        }
+        System.out.println("Symbol: " + transactionNotification.symbol());
+        System.out.println("Price: " + transactionNotification.price());
+        System.out.println("Number of Shares: " + transactionNotification.numberOfShares());
+    }
+    
     private static void ispisStockUpdate(List<StockTCP> stocks) {
         // Move the cursor to the top-left corner
         //System.out.print(Ansi.ansi().cursor(1, 1));
