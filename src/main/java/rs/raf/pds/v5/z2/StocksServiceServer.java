@@ -57,9 +57,10 @@ public class StocksServiceServer {
         
         Thread tcpThread = new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(9090)) {
+            	System.out.println("Started TCP server at port 9090");
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
-                    System.out.println("I DONT KAPIRAM");
+                    System.out.println("Client connected to TCP");
                     handleTCPClient(clientSocket);
                 }
             } catch (IOException e) {
@@ -132,6 +133,7 @@ public class StocksServiceServer {
         private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         protected StocksServiceImpl() {
+        	System.out.println("Started gRPC server at port 8090");
             initUnos();
 
             tcpThread.start();
@@ -182,7 +184,6 @@ public class StocksServiceServer {
         	        .atZone(ZoneId.systemDefault())
         	        .toInstant()
         	        .truncatedTo(ChronoUnit.DAYS);
-        	System.out.println(date);
             CopyOnWriteArrayList<TransactionHistory> history = dateTransactionHistoryMap.get(date);
             if (history != null) {
                 for (TransactionHistory event : history) {
@@ -255,7 +256,7 @@ public class StocksServiceServer {
             	}
             }
             
-            List<Offer> offers = offersList.stream()
+            List<Offer> offers = offersList.stream()																			  //TODO: Use something other than double for storing stockPrice
                     .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && Precision.equals(offer.getStockPrice(), request.getStockPrice(), 0.01)))
                     .collect(Collectors.toList());
     		int numberOfOffersRequest = request.getNumberOfOffers();
