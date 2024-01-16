@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -34,6 +35,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.apache.commons.math3.util.Precision;
 
 public class StocksServiceServer {
     private static final String DATA_FILE_PATH = "transactionHistory.txt";
@@ -247,14 +250,13 @@ public class StocksServiceServer {
 
             for(Offer offer:userOffers) {
             	if(request.getBuy() == offer.getBuy()) {
-                	responseMessage.append("You already have an existing order for " + requestSymbol + " It will be replaced with your new order.");
-                	responseMessage.append("\n");
+                	responseMessage.append("You already have an existing order for " + requestSymbol + " It will be replaced with your new order." + "\n");
                 	offersList.remove(offer);
             	}
             }
             
             List<Offer> offers = offersList.stream()
-                    .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && offer.getStockPrice() == request.getStockPrice()))
+                    .filter(offer -> (!offer.getClientId().equals(request.getClientId()) && offer.getBuy() != request.getBuy() && Precision.equals(offer.getStockPrice(), request.getStockPrice(), 0.01)))
                     .collect(Collectors.toList());
     		int numberOfOffersRequest = request.getNumberOfOffers();
             for (Offer offer:offers) {
@@ -380,13 +382,7 @@ public class StocksServiceServer {
         }
         
         private void notifyTransaction(Offer buyOffer, Offer sellOffer) {
-        	int test = 0;
-        	if(buyOffer.getNumberOfOffers() > sellOffer.getNumberOfOffers()) {
-        		test = sellOffer.getNumberOfOffers();
-        	}
-        	else {
-        		test = buyOffer.getNumberOfOffers();
-        	}
+        	int nrOfStocksTraded = Math.min(buyOffer.getNumberOfOffers(), sellOffer.getNumberOfOffers());
         	/*
         	TransactionNotification transactionNotificationBuyer = TransactionNotification.newBuilder()
                     .setClientId(buyOffer.getClientId())
@@ -408,7 +404,7 @@ public class StocksServiceServer {
             //StreamObserver<TransactionNotification> sellerObserver = idTransObserverMap.get(sellOffer.getClientId());
         	
         	
-        	TransactionNotification transactionNotificationSeller = new TransactionNotification(sellOffer.getSymbol(), sellOffer.getStockPrice(), test, false);
+        	TransactionNotification transactionNotificationSeller = new TransactionNotification(sellOffer.getSymbol(), sellOffer.getStockPrice(), nrOfStocksTraded, false);
         	
             ObjectOutputStream writerSeller = socketWriterMap.get(idSocketMap.get(sellOffer.getClientId()));
         	try {
@@ -420,7 +416,7 @@ public class StocksServiceServer {
 				e.printStackTrace();
 			}
             
-        	TransactionNotification transactionNotificationBuyer = new TransactionNotification(buyOffer.getSymbol(), buyOffer.getStockPrice(), test, true);
+        	TransactionNotification transactionNotificationBuyer = new TransactionNotification(buyOffer.getSymbol(), buyOffer.getStockPrice(), nrOfStocksTraded, true);
         	
             ObjectOutputStream writerBuyer = socketWriterMap.get(idSocketMap.get(buyOffer.getClientId()));
         	try {
@@ -446,12 +442,29 @@ public class StocksServiceServer {
                     .setClientIdBuyer(buyOffer.getClientId())
                     .setSymbol(sellOffer.getSymbol())
                     .setPrice(sellOffer.getStockPrice())
-                    .setNumberOfShares(test)
+                    .setNumberOfShares(nrOfStocksTraded)
                     .setDateUnix(currentTime.toEpochMilli())
                     .build();
         	Instant transactionDate = truncateToDay(currentTime);
 
         	dateTransactionHistoryMap.computeIfAbsent(transactionDate, k -> new CopyOnWriteArrayList<>()).add(transactionHistory);
+        	Stock stock = symbolStockMap.get(sellOffer.getSymbol());
+        	double priceChangePercentage = generateRandomPercentage(nrOfStocksTraded);
+        	double newPrice = stock.getStartPrice() * (1 + priceChangePercentage);
+        	Stock updatedStock = Stock.newBuilder(stock.toBuilder()
+        			.setStartPrice(newPrice)
+        			.setChangeInPrice(newPrice - stock.getStartPrice()).build())
+        			.build();
+
+            symbolStockMap.put(sellOffer.getSymbol(), updatedStock);
+        }
+        
+        private double generateRandomPercentage(int numberOfStocksTraded) {
+            Random random = new Random();
+            double basePercentageChange = 0.02;
+            double maxAdditionalPercentageChange = numberOfStocksTraded/1000;
+
+            return basePercentageChange + (maxAdditionalPercentageChange * random.nextDouble());
         }
         
         private Instant truncateToDay(Instant instant) {

@@ -32,11 +32,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class StocksServiceClient {
     
     private static final Map<String, Stock> stockMap = new HashMap<String, Stock>();
     private static final Map<String, Integer> stockPostionMap = new HashMap<String, Integer>();
+    private static final Random random = new Random();
     public static void main(String[] args) throws IOException {
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8090)
                 .usePlaintext()
@@ -135,10 +137,12 @@ public class StocksServiceClient {
             }
         };
         
+
+
         StreamObserver<AddOfferResult> responseObserverAddOfferResult = new StreamObserver<AddOfferResult>() {
             @Override
             public void onNext(AddOfferResult result) {
-            	System.err.println(result);
+            	System.out.println(result);
             }
 
             @Override
@@ -204,13 +208,16 @@ public class StocksServiceClient {
 
         Thread clientThread = new Thread(clientCode);
         clientThread.start();
-
-
+        
+        boolean automatic = false;
         while (true) {
             System.out.print("Enter command (/exit to exit): ");
             command = reader.readLine().trim();
             
             if ("/exit".equalsIgnoreCase(command)) {
+                break;
+            } else if ("/automatic".equalsIgnoreCase(command)) {
+            	automatic = true;
                 break;
             } else if (command.startsWith("/buyOffer")) {
             	String[] parts = command.split("\\s+", 4);
@@ -325,10 +332,44 @@ public class StocksServiceClient {
                 System.out.println("Invalid command. Please try again.");
             }
         }
+        if(automatic) {
+        	List<String> all_symbols = new ArrayList<String>(stockMap.keySet());
+
+        	while(true) {
+                String randomSymbol = all_symbols.get(random.nextInt(all_symbols.size()));
+                boolean isBuy = random.nextBoolean();
+                double randomPrice = generateRandomPrice(stockMap.get(randomSymbol).getStartPrice());
+                int numberOfOffers = random.nextInt(10) + 1;
+
+                // Create and send a random buy/sell offer
+                asyncStub.addOffer(Offer.newBuilder()
+                        .setSymbol(randomSymbol)
+                        .setStockPrice(randomPrice)
+                        .setNumberOfOffers(numberOfOffers)
+                        .setBuy(isBuy)
+                        .setClientId(clientId)
+                        .build(), responseObserverAddOfferResult);
+        		try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        }
         channel.shutdown();
         reader.close();
     }
+    
 
+    
+    private static double generateRandomPrice(double realPrice) {
+        // Generate a random price close to the real price (you can adjust the range as needed)
+        double deviation = random.nextDouble() * 5.0; // Adjust the range as needed
+        boolean positiveDeviation = random.nextBoolean();
+        return positiveDeviation ? realPrice + deviation : realPrice - deviation;
+    }
+    
     private static void ispisStock(Stock stock) {
         System.out.println(stock.getSymbol() + " " +
                 String.format("%.2f", stock.getStartPrice()) + " " +
@@ -380,6 +421,14 @@ public class StocksServiceClient {
             }
             System.out.print(outputBuilder.toString());
             System.out.print("\n");
+            Stock s = Stock.newBuilder()
+            		.setSymbol(symbol)
+            		.setStartPrice(stock.startPrice())
+            		.setChangeInPrice(changeInPrice)
+            		.setCompanyName(symbol)
+            		.setDateUnix(stock.dateUnix())
+            		.build();
+            stockMap.put(symbol, s);
         }
 
         // Move the cursor back to the top-left corner after printing
@@ -387,6 +436,5 @@ public class StocksServiceClient {
             System.out.print(Ansi.ansi().cursorUpLine());
         }
     }
-
-
+    
 }
